@@ -1,11 +1,17 @@
 import { useState } from 'react'
 import './App.css'
-import Home from './comp/Home.jsx'
+import Home from './comp/Home/Home.jsx'
+import Login from './comp/Login/Login.jsx';
 
-function App() {
-  return (
-    <Home />
-  )
+export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("auth") === "true"
+  );
+
+  if (!isAuthenticated) {
+    return <Login setIsAuthenticated={setIsAuthenticated} />;
+  }
+
+  return <Home isAuthenticated={isAuthenticated} />;
 }
 
-export default App
