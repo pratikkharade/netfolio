@@ -13,5 +13,5 @@ export default function Logout() {
         <div className="logout-icon" onClick={handleLogout}>
             <i className="fa-solid fa-arrow-right-from-bracket"></i>
         </div>
-    )
+    );
 }

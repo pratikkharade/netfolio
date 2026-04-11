@@ -1,7 +1,9 @@
 import React from 'react';
 import "./Account.css";
 
-function Account({ name, balance, category, type, formatCurrency }) {
+import formatCurrency from '../helpers.jsx';
+
+function Account({ name, balance, category, type }) {
     return (
         <div className='account-container'>
             {/* <div className='account' style={rowStyle}> */}
@@ -9,7 +11,7 @@ function Account({ name, balance, category, type, formatCurrency }) {
             <span
                 style={{
                     color: type === "liability" ? "#ff4d6d" : "#22c55e",
-                    fontWeight: 600,
+                    fontWeight: "bold",
                 }}
             >
                 {formatCurrency(balance)}

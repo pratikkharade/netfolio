@@ -3,9 +3,9 @@ import Logout from "../Logout/Logout";
 
 import "./Home.css";
 import { data_url } from "../../config.jsx";
-import Carousel from "../Carousel/Carousel.jsx";
 
-import formatCurrency from "../helpers.jsx";
+import Header from "../Header/Header.jsx";
+import Details from "../../Details/Details.jsx";
 
 export default function FinanceApp({ isAuthenticated }) {
 
@@ -80,112 +80,25 @@ export default function FinanceApp({ isAuthenticated }) {
 
     if (isAuthenticated) {
         return (
-            <div style={pageStyle}>
+            <div className="home-container">
                 <Logout />
-                <div style={containerStyle}>
-                    <div className="header-container">
-                        <h1 style={titleStyle}>💰 NetFolio 💰</h1>
-                        <h3 style={{ margin: 12 }}>Last Updated: {date}</h3>
-                        <div style={{ ...cardStyle, background: gradientBlue, marginBottom: 12 }}>
-                            <p style={labelStyle}>Net Worth</p>
-                            <p style={valueStyle}>{formatCurrency(netWorth)}</p>
-                        </div>
-                        <div style={gridStyle}>
-                            <div style={{ ...cardStyle, background: gradientGreen }}>
-                                <p style={labelStyle}>Assets</p>
-                                <p style={valueStyle}>{formatCurrency(totalAssets)}</p>
-                            </div>
-
-                            <div style={{ ...cardStyle, background: gradientRed }}>
-                                <p style={labelStyle}>Liabilities</p>
-                                <p style={valueStyle}>{formatCurrency(totalLiabilities)}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style={listCardStyle}>
-                        <h2 style={{ marginBottom: "8px", fontFamily: "inherit" }}>Accounts</h2>
-                        <div style={{ overflow: "auto" }} >
-                            <Carousel type="asset" title="Checking Accounts" data={checking} />
-                            <Carousel type="asset" title="Saving Accounts" data={saving} />
-                            <Carousel type="asset" title="Investment Accounts" data={investment} />
-                            <Carousel type="asset" title="Retirement Accounts" data={retirement} />
-                            {
-                                rent.length > 0 && <Carousel type="liability" title="Rent & Utilities" data={rent} />
-                            }
-                            {
-                                cc.length > 0 && <Carousel type="liability" title="Credit Cards" data={cc} />
-                            }
-                        </div>
-                    </div>
+                <div className="home-content">
+                    <Header
+                        date={date}
+                        netWorth={netWorth}
+                        totalAssets={totalAssets}
+                        totalLiabilities={totalLiabilities}
+                    />
+                    <Details
+                        checking={checking}
+                        saving={saving}
+                        investment={investment}
+                        retirement={retirement}
+                        rent={rent}
+                        cc={cc}
+                    />
                 </div>
             </div >
         );
     }
 }
-
-// 🌈 Styles
-const pageStyle = {
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f172a, #1e293b)",
-    padding: 16,
-    color: "white",
-    position: "relative",
-    fontFamily: "fantasy"
-};
-
-const containerStyle = {
-    maxWidth: 900,
-    margin: "0 auto",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-};
-
-const titleStyle = {
-    fontSize: 30,
-    fontWeight: 700,
-    margin: "12px 0",
-    fontFamily: "FontAwesome"
-};
-
-const gridStyle = {
-    display: "flex",
-    gap: 12,
-    marginBottom: 12,
-};
-
-const cardStyle = {
-    padding: 12,
-    borderRadius: 16,
-    flex: 1,
-    color: "white",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
-};
-
-const listCardStyle = {
-    background: "rgba(255,255,255,0.05)",
-    padding: 12,
-    borderRadius: 16,
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
-    overflow: "hidden",
-    display: "flex",
-    flexDirection: "column",
-};
-
-const labelStyle = {
-    fontSize: 20,
-    opacity: 0.8,
-    fontWeight: 700,
-};
-
-const valueStyle = {
-    fontSize: 22,
-    fontWeight: 700,
-};
-
-// 🎨 Gradients
-const gradientGreen = "linear-gradient(135deg, #16a34a, #4ade80)";
-const gradientRed = "linear-gradient(135deg, #dc2626, #fb7185)";
-const gradientBlue = "linear-gradient(135deg, #2563eb, #60a5fa)";

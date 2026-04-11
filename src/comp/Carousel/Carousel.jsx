@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import Account from '../Account/Account';
 import formatCurrency from '../helpers.jsx';
+import Loading from '../Loading/Loading';
 
 import "./Carousel.css";
 
@@ -16,8 +17,8 @@ function Carousel({ type, title, data }) {
                     <div>{title}</div>
                     <div style={{
                         color: type === "liability" ? "#ff4d6d" : "#22c55e",
-                        "fontSize": "small"
-                    }}>{formatCurrency(total)}</div>
+                        fontSize: "small", fontWeight: "bold"
+                    }}>{total ? formatCurrency(total) : <Loading />}</div>
                 </div>
                 <button
                     type='button'
@@ -37,13 +38,12 @@ function Carousel({ type, title, data }) {
                             name={d.name}
                             balance={d.balance}
                             type={d.type}
-                            formatCurrency={formatCurrency}
                         />
                     ))}
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default Carousel;
