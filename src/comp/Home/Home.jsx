@@ -3,11 +3,21 @@ import Logout from "../Logout/Logout";
 
 import "./Home.css";
 import { data_url } from "../../config.jsx";
+import Carousel from "../Carousel/Carousel.jsx";
+
+import formatCurrency from "../helpers.jsx";
 
 export default function FinanceApp({ isAuthenticated }) {
 
     const [data, setData] = React.useState([]);
     const [date, setDate] = React.useState(null);
+
+    const [checking, setChecking] = React.useState([]);
+    const [saving, setSaving] = React.useState([]);
+    const [investment, setInvestment] = React.useState([]);
+    const [retirement, setRetirement] = React.useState([]);
+    const [rent, setRent] = React.useState([]);
+    const [cc, setCC] = React.useState([]);
 
     const totalAssets = data
         .filter((d) => d.type === "asset")
@@ -33,28 +43,36 @@ export default function FinanceApp({ isAuthenticated }) {
                 return {
                     name: r[0],
                     type: r[1],
-                    balance: parseFloat(r[2] || 0),
-                    notes: r[3].trim()
+                    category: r[2].trim(),
+                    balance: parseFloat(r[3] || 0)
                 }
             }).filter(d => d.balance !== 0);
 
-            data_from_csv.sort((a, b) => {
-                const typeCompare = a.type.localeCompare(b.type);
-                if (typeCompare !== 0) return typeCompare;
-                return b.balance - a.balance;
-            });
+            const categorizedData = data_from_csv.reduce(
+                (acc, item) => {
+                    if (item.category === "checking") acc.checking.push(item);
+                    if (item.category === "saving") acc.saving.push(item);
+                    if (item.category === "investment") acc.investment.push(item);
+                    if (item.category === "retirement") acc.retirement.push(item);
+                    if (item.category === "rent") acc.rent.push(item);
+                    if (item.category === "cc") acc.cc.push(item);
+                    return acc;
+                },
+                { checking: [], saving: [], investment: [], retirement: [], rent: [], cc: [] }
+            );
+
+            setChecking(categorizedData.checking);
+            setSaving(categorizedData.saving);
+            setInvestment(categorizedData.investment);
+            setRetirement(categorizedData.retirement);
+            setRent(categorizedData.rent);
+            setCC(categorizedData.cc);
+
             setData(data_from_csv);
         } catch (err) {
             console.error("Error fetching CSV:", err);
         }
     }
-
-    const formatCurrency = (value) => {
-        return value.toLocaleString(undefined, {
-            style: "currency",
-            currency: "USD",
-        });
-    };
 
     useEffect(() => {
         fetchCSV();
@@ -86,24 +104,18 @@ export default function FinanceApp({ isAuthenticated }) {
                     </div>
 
                     <div style={listCardStyle}>
-                        <h2 style={{ marginBottom: 0 }}>Accounts</h2>
+                        <h2 style={{ marginBottom: "8px", fontFamily: "inherit" }}>Accounts</h2>
                         <div style={{ overflow: "auto" }} >
-                            {data.map((d, i) => (
-                                <div key={i} style={i == data.length - 1 ? { ...rowParentStyle, borderBottom: "0px" } : rowParentStyle}>
-                                    <div style={rowStyle}>
-                                        <span>{d.name}</span>
-                                        <span
-                                            style={{
-                                                color: d.type === "liability" ? "#ff4d6d" : "#22c55e",
-                                                fontWeight: 600,
-                                            }}
-                                        >
-                                            {formatCurrency(d.balance)}
-                                        </span>
-                                    </div>
-                                    <div style={{ fontSize: 12, opacity: 0.7, textAlign: "start" }}>{d.notes}</div>
-                                </div>
-                            ))}
+                            <Carousel type="asset" title="Checking Accounts" data={checking} />
+                            <Carousel type="asset" title="Saving Accounts" data={saving} />
+                            <Carousel type="asset" title="Investment Accounts" data={investment} />
+                            <Carousel type="asset" title="Retirement Accounts" data={retirement} />
+                            {
+                                rent.length > 0 && <Carousel type="liability" title="Rent & Utilities" data={rent} />
+                            }
+                            {
+                                cc.length > 0 && <Carousel type="liability" title="Credit Cards" data={cc} />
+                            }
                         </div>
                     </div>
                 </div>
@@ -119,6 +131,7 @@ const pageStyle = {
     padding: 16,
     color: "white",
     position: "relative",
+    fontFamily: "fantasy"
 };
 
 const containerStyle = {
@@ -133,6 +146,7 @@ const titleStyle = {
     fontSize: 30,
     fontWeight: 700,
     margin: "12px 0",
+    fontFamily: "FontAwesome"
 };
 
 const gridStyle = {
@@ -158,20 +172,6 @@ const listCardStyle = {
     overflow: "hidden",
     display: "flex",
     flexDirection: "column",
-};
-
-const rowParentStyle = {
-    // display: "flex",
-    // justifyContent: "space-between",
-    padding: "8px",
-    borderBottom: "1px solid rgba(255,255,255,0.1)",
-};
-
-const rowStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    // padding: "10px 0 0",
-    // borderBottom: "1px solid rgba(255,255,255,0.1)",
 };
 
 const labelStyle = {

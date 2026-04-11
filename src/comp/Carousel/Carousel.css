@@ -1,0 +1,71 @@
+.carousel-container {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.carousel-container:last-of-type {
+    margin-bottom: 0;
+}
+
+.carousel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.carousel-title {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.carousel-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.carousel-toggle-btn:active {
+    transform: scale(0.96);
+}
+
+.carousel-content {
+    margin-top: 8px;
+}
+
+.carousel-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: grid-template-rows 0.28s ease, opacity 0.22s ease, transform 0.28s ease;
+}
+
+.carousel-collapse.expanded {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-collapse .carousel-content {
+    overflow: hidden;
+}
+
+.carousel-collapse.collapsed .carousel-content {
+    margin: 0;
+}
