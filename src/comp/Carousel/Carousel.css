@@ -14,6 +14,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
+    cursor: pointer;
 }
 
 .carousel-title {
@@ -34,6 +35,10 @@
     color: #ffffff;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease;
+
+    &.expanded {
+        transform: rotate(90deg);
+    }
 }
 
 .carousel-toggle-btn:hover {
@@ -68,4 +73,17 @@
 
 .carousel-collapse.collapsed .carousel-content {
     margin: 0;
+}
+
+.carousel-total {
+    font-size: small;
+    font-weight: bold;
+
+    &.asset {
+        color: #22c55e;
+    }
+
+    &.liability {
+        color: #ff4d6d;
+    }
 }

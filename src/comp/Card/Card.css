@@ -1,0 +1,31 @@
+.card-wrapper {
+    padding: 12px;
+    border-radius: 16px;
+    flex: 1;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+    &.gradientBlue {
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #2563eb, #60a5fa);
+    }
+
+    &.gradientRed {
+        background: linear-gradient(135deg, #dc2626, #fb7185);
+    }
+
+    &.gradientGreen {
+        background: linear-gradient(135deg, #16a34a, #4ade80);
+    }
+}
+
+.card-label {
+    font-size: 20px;
+    opacity: 0.8;
+    font-weight: 700;
+}
+
+.card-value {
+    font-size: 22px;
+    font-weight: 700;
+}

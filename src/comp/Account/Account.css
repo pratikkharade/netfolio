@@ -9,3 +9,15 @@
     border-bottom: none;
     padding-bottom: 0;
 }
+
+.acoount-amount {
+    font-weight: bold;
+
+    &.liability {
+        color: #ff4d6d;
+    }
+
+    &.asset {
+        color: #22c55e;
+    }
+}

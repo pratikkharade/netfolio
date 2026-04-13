@@ -1,7 +1,7 @@
 import React from 'react';
 
 import "./Details.css";
-import Carousel from '../comp/Carousel/Carousel';
+import Carousel from '../Carousel/Carousel';
 
 function Details({ checking, saving, investment, retirement, rent, cc }) {
     return (

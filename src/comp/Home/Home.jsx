@@ -5,7 +5,9 @@ import "./Home.css";
 import { data_url } from "../../config.jsx";
 
 import Header from "../Header/Header.jsx";
-import Details from "../../Details/Details.jsx";
+import Details from "../Details/Details.jsx";
+
+import { getTotalByType } from "../helpers.jsx";
 
 export default function FinanceApp({ isAuthenticated }) {
 
@@ -19,15 +21,20 @@ export default function FinanceApp({ isAuthenticated }) {
     const [rent, setRent] = React.useState([]);
     const [cc, setCC] = React.useState([]);
 
-    const totalAssets = data
-        .filter((d) => d.type === "asset")
-        .reduce((sum, d) => sum + d.balance, 0);
+    const [totalAssets, setTotalAssets] = React.useState(0);
+    const [totalLiabilities, setTotalLiabilities] = React.useState(0);
+    const [netWorth, setNetWorth] = React.useState(0);
 
-    const totalLiabilities = data
-        .filter((d) => d.type === "liability")
-        .reduce((sum, d) => sum + d.balance, 0);
+    useEffect(() => {
+        const assets = getTotalByType(data, "asset");
+        setTotalAssets(assets);
 
-    const netWorth = totalAssets - totalLiabilities;
+        const liabilities = getTotalByType(data, "liability");
+        setTotalLiabilities(liabilities);
+
+        const netWorth = assets - liabilities;
+        setNetWorth(netWorth);
+    }, [data]);
 
     async function fetchCSV() {
         let data_from_csv = [];
