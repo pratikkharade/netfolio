@@ -22,7 +22,6 @@ function Details({ categories, totalAssets, isLoading }) {
                         <p className="section-eyebrow">ACCOUNTS</p>
                         <h2 id="accounts-title">Account details</h2>
                     </div>
-                    <p>Select a category to see each account.</p>
                 </div>
 
                 <div className="carousel-wrapper">

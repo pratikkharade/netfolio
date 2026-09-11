@@ -29,6 +29,24 @@
     background: var(--accent-soft);
 }
 
+.allocation-view-toggle {
+    padding: 0;
+    appearance: none;
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.allocation-view-toggle:hover {
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+    background: var(--surface-hover);
+    transform: translateY(-1px);
+}
+
+.allocation-view-toggle:active {
+    transform: translateY(0);
+}
+
 .panel-description {
     margin: 10px 0 26px;
     color: var(--text-muted);
@@ -39,6 +57,140 @@
 .allocation-list {
     display: grid;
     gap: 22px;
+}
+
+.allocation-view {
+    min-height: 240px;
+    animation: allocation-view-in 220ms ease both;
+}
+
+.allocation-view-pie {
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+}
+
+.allocation-pie-stage {
+    position: relative;
+    width: min(250px, 76vw);
+    height: 226px;
+    perspective: 720px;
+}
+
+.allocation-pie-stack {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    width: 230px;
+    max-width: 92%;
+    aspect-ratio: 1;
+    transform: translateX(-50%) rotateX(48deg) rotateZ(-5deg);
+    transform-style: preserve-3d;
+}
+
+.allocation-pie-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.allocation-pie-depth {
+    filter: brightness(0.42) saturate(0.85) drop-shadow(0 18px 18px rgba(0, 0, 0, 0.36));
+    transform: translate3d(0, 17px, -18px);
+}
+
+.allocation-pie-depth path {
+    stroke: rgba(3, 7, 18, 0.5);
+    stroke-width: 2;
+}
+
+.allocation-pie-face {
+    filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.2));
+    transform: translateZ(12px);
+}
+
+.allocation-pie-slice {
+    stroke: var(--surface);
+    stroke-width: 2.5;
+    cursor: pointer;
+    transform-box: view-box;
+    transform-origin: center;
+    transition: transform 180ms ease, filter 180ms ease, stroke 180ms ease;
+}
+
+.allocation-pie-slice:hover,
+.allocation-pie-slice:focus,
+.allocation-pie-slice.is-active {
+    stroke: rgba(248, 250, 252, 0.78);
+    filter: brightness(1.16) drop-shadow(0 8px 7px rgba(0, 0, 0, 0.3));
+    outline: none;
+}
+
+.allocation-pie-tooltip {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    min-height: 44px;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    pointer-events: none;
+    transition: color 160ms ease, transform 160ms ease;
+}
+
+.allocation-pie-tooltip.is-visible {
+    color: var(--text-secondary);
+    transform: translateY(-2px);
+}
+
+.allocation-pie-tooltip strong {
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+.allocation-pie-tooltip span {
+    font-variant-numeric: tabular-nums;
+}
+
+.allocation-legend {
+    display: grid;
+    width: 100%;
+    gap: 12px;
+}
+
+.allocation-legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: calc(100% + 12px);
+    min-height: 36px;
+    padding: 6px;
+    border: 0;
+    border-radius: 8px;
+    color: inherit;
+    background: transparent;
+    font-size: 0.82rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.allocation-legend-item:hover,
+.allocation-legend-item.is-active {
+    background: var(--surface-hover);
+    transform: translateX(2px);
+}
+
+.allocation-legend-item:disabled {
+    cursor: default;
+    opacity: 0.62;
+    transform: none;
 }
 
 .allocation-item {
@@ -98,6 +250,18 @@
     height: 100%;
     border-radius: inherit;
     transition: width 450ms ease;
+}
+
+@keyframes allocation-view-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 780px) {

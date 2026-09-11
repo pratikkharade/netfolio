@@ -42,6 +42,13 @@
     border-radius: 8px;
 }
 
+.loading-allocation-pie {
+    display: block;
+    width: min(210px, 76vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
 .loading-composition {
     display: block;
     width: 100%;

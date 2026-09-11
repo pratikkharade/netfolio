@@ -63,7 +63,6 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                         <p className="section-eyebrow">OVERVIEW</p>
                         <h1 id="overview-title">Your financial snapshot</h1>
                     </div>
-                    <p>A clear view of what you own and what you owe.</p>
                 </div>
 
                 <div className="summary-grid">
