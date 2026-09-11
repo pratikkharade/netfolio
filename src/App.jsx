@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import './App.css'
 import Home from './comp/Home/Home.jsx'
-import Login from './comp/Login/Login.jsx';
+import Login from './comp/Login/Login.jsx'
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -9,9 +8,8 @@ export default function App() {
   );
 
   if (!isAuthenticated) {
-    return <Login setIsAuthenticated={setIsAuthenticated} />;
+    return <Login setIsAuthenticated={setIsAuthenticated} />
   }
 
-  return <Home isAuthenticated={isAuthenticated} />;
+  return <Home setIsAuthenticated={setIsAuthenticated} />
 }
-

@@ -1,3 +1,51 @@
 .loading {
-    font-size: 12px;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--surface-strong);
+}
+
+.loading::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+    transform: translateX(-100%);
+    animation: loading-shimmer 1.35s infinite;
+}
+
+.loading-value {
+    width: min(250px, 68%);
+    height: 1em;
+}
+
+.loading-date {
+    width: 96px;
+    height: 12px;
+}
+
+.loading-inline {
+    width: 70px;
+    height: 10px;
+}
+
+.loading-allocation {
+    display: block;
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.loading-composition {
+    display: block;
+    width: 100%;
+    height: 36px;
+    margin-top: auto;
+}
+
+@keyframes loading-shimmer {
+    to {
+        transform: translateX(100%);
+    }
 }

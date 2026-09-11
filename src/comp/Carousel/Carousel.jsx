@@ -1,48 +1,57 @@
-import React, { useEffect } from 'react';
+import { useId, useMemo, useState } from "react"
+import Account from "../Account/Account.jsx"
+import Loading from "../Loading/Loading.jsx"
+import Chevron from "./Chevron.jsx"
+import { formatCurrency } from "../helpers.jsx"
+import "./Carousel.css"
 
-import Account from '../Account/Account';
-import Loading from '../Loading/Loading';
-import Chevron from './Chevron.jsx';
-
-import { formatCurrency } from '../helpers.jsx';
-
-import "./Carousel.css";
-
-function Carousel({ type, title, data }) {
-    const [isExpanded, setIsExpanded] = React.useState(false);
-    const [total, setTotal] = React.useState(0);
-
-    useEffect(() => {
-        const total = data.reduce((sum, item) => sum + item.balance, 0);
-        setTotal(total);
-    }, [data]);
+function Carousel({ type, title, data, isLoading }) {
+    const [isExpanded, setIsExpanded] = useState(false)
+    const contentId = useId()
+    const total = data.reduce((sum, item) => sum + item.balance, 0)
+    const sortedData = useMemo(() => [...data].sort((a, b) => b.balance - a.balance), [data])
 
     return (
-        <div className='carousel-container'>
-            <div className='carousel-header' onClick={() => setIsExpanded((prev) => !prev)}>
-                <div className='carousel-title'>
-                    <div>{title}</div>
-                    <div className={`carousel-total ${type}`} >
-                        {total ? formatCurrency(total) : <Loading />}
+        <div className="carousel-container">
+            <button
+                type="button"
+                className="carousel-header"
+                onClick={() => setIsExpanded((expanded) => !expanded)}
+                aria-expanded={isExpanded}
+                aria-controls={contentId}
+            >
+                <div className="carousel-title">
+                    <div className="carousel-title-line">
+                        <span>{title}</span>
+                        {!isLoading && <span className="account-count">{data.length}</span>}
                     </div>
+                    <span className={`carousel-total ${type}`}>
+                        {isLoading ? <Loading variant="inline" /> : formatCurrency(total)}
+                    </span>
                 </div>
-                <Chevron isExpanded={isExpanded} title={title} />
-            </div>
+                <Chevron isExpanded={isExpanded} />
+            </button>
 
-            <div className={`carousel-collapse ${isExpanded ? 'expanded' : 'collapsed'}`} aria-hidden={!isExpanded}>
-                <div className='carousel-content'>
-                    {data.sort((a, b) => b.balance - a.balance).map((d, i) => (
+            <div
+                id={contentId}
+                className={`carousel-collapse ${isExpanded ? "expanded" : "collapsed"}`}
+                aria-hidden={!isExpanded}
+            >
+                <div className="carousel-content" role="list">
+                    {sortedData.length > 0 ? sortedData.map((account) => (
                         <Account
-                            key={i}
-                            name={d.name}
-                            balance={d.balance}
-                            type={d.type}
+                            key={`${account.name}-${account.type}`}
+                            name={account.name}
+                            balance={account.balance}
+                            type={account.type}
                         />
-                    ))}
+                    )) : (
+                        <p className="accounts-empty">No accounts in this category.</p>
+                    )}
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default Carousel;
+export default Carousel

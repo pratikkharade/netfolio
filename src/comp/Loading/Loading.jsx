@@ -1,10 +1,11 @@
-import React from 'react';
+import "./Loading.css"
 
-import "./Loading.css";
-function Loading() {
+function Loading({ variant = "text" }) {
     return (
-        <p className='loading'>Loading...</p>
+        <span className={`loading loading-${variant}`} role="status">
+            <span className="sr-only">Loading</span>
+        </span>
     )
 }
 
-export default Loading;
+export default Loading

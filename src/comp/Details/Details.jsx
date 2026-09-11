@@ -1,22 +1,44 @@
-import React from 'react';
+import Allocation from "../Allocation/Allocation.jsx"
+import Carousel from "../Carousel/Carousel.jsx"
+import "./Details.css"
 
-import "./Details.css";
-import Carousel from '../Carousel/Carousel';
+const accountGroups = [
+    { key: "checking", type: "asset", title: "Checking accounts" },
+    { key: "saving", type: "asset", title: "Savings accounts" },
+    { key: "investment", type: "asset", title: "Investment accounts" },
+    { key: "retirement", type: "asset", title: "Retirement accounts" },
+    { key: "rent", type: "liability", title: "Rent & utilities" },
+    { key: "cc", type: "liability", title: "Credit cards" },
+]
 
-function Details({ checking, saving, investment, retirement, rent, cc }) {
+function Details({ categories, totalAssets, isLoading }) {
     return (
-        <div className="details-container">
-            <h2 className='details-title'>Accounts</h2>
-            <div className='carsousel-wrapper'>
-                <Carousel type="asset" title="Checking Accounts" data={checking} />
-                <Carousel type="asset" title="Saving Accounts" data={saving} />
-                <Carousel type="asset" title="Investment Accounts" data={investment} />
-                <Carousel type="asset" title="Retirement Accounts" data={retirement} />
-                {rent.length > 0 && <Carousel type="liability" title="Rent & Utilities" data={rent} />}
-                {cc.length > 0 && <Carousel type="liability" title="Credit Cards" data={cc} />}
-            </div >
-        </div >
-    );
+        <div className="dashboard-grid">
+            <Allocation categories={categories} totalAssets={totalAssets} isLoading={isLoading} />
+
+            <section className="details-container" aria-labelledby="accounts-title">
+                <div className="details-heading">
+                    <div>
+                        <p className="section-eyebrow">ACCOUNTS</p>
+                        <h2 id="accounts-title">Account details</h2>
+                    </div>
+                    <p>Select a category to see each account.</p>
+                </div>
+
+                <div className="carousel-wrapper">
+                    {accountGroups.map((group) => (
+                        <Carousel
+                            key={group.key}
+                            type={group.type}
+                            title={group.title}
+                            data={categories[group.key]}
+                            isLoading={isLoading}
+                        />
+                    ))}
+                </div>
+            </section>
+        </div>
+    )
 }
 
-export default Details;
+export default Details

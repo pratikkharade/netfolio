@@ -1,111 +1,128 @@
-import React, { use, useEffect } from "react";
-import Logout from "../Logout/Logout";
+import { useEffect, useMemo, useState } from "react"
+import { AlertCircle, RefreshCw } from "lucide-react"
+import { data_url } from "../../config.jsx"
+import { getTotalByType } from "../helpers.jsx"
+import Details from "../Details/Details.jsx"
+import Header from "../Header/Header.jsx"
+import "./Home.css"
 
-import "./Home.css";
-import { data_url } from "../../config.jsx";
+const EMPTY_CATEGORIES = {
+    checking: [],
+    saving: [],
+    investment: [],
+    retirement: [],
+    rent: [],
+    cc: [],
+}
 
-import Header from "../Header/Header.jsx";
-import Details from "../Details/Details.jsx";
+function createEmptyCategories() {
+    return Object.fromEntries(
+        Object.keys(EMPTY_CATEGORIES).map((category) => [category, []])
+    )
+}
 
-import { getTotalByType } from "../helpers.jsx";
+function parsePortfolioCSV(rawData) {
+    const rows = rawData
+        .split(/\r?\n/)
+        .map((row) => row.split(","))
 
-export default function FinanceApp({ isAuthenticated }) {
+    const updatedAt = rows[0]?.[1]?.trim() || null
+    const accounts = rows
+        .slice(2)
+        .filter((row) => row.length >= 4 && row[0]?.trim())
+        .map((row) => ({
+            name: row[0].trim(),
+            type: row[1]?.trim(),
+            category: row[2]?.trim(),
+            balance: Number.parseFloat(row[3] || 0),
+        }))
+        .filter((account) => Number.isFinite(account.balance) && account.balance !== 0)
 
-    const [data, setData] = React.useState([]);
-    const [date, setDate] = React.useState(null);
+    return { accounts, updatedAt }
+}
 
-    const [checking, setChecking] = React.useState([]);
-    const [saving, setSaving] = React.useState([]);
-    const [investment, setInvestment] = React.useState([]);
-    const [retirement, setRetirement] = React.useState([]);
-    const [rent, setRent] = React.useState([]);
-    const [cc, setCC] = React.useState([]);
-
-    const [totalAssets, setTotalAssets] = React.useState(0);
-    const [totalLiabilities, setTotalLiabilities] = React.useState(0);
-    const [netWorth, setNetWorth] = React.useState(0);
+export default function FinanceApp({ setIsAuthenticated }) {
+    const [data, setData] = useState([])
+    const [date, setDate] = useState(null)
+    const [status, setStatus] = useState("loading")
+    const [error, setError] = useState("")
+    const [requestKey, setRequestKey] = useState(0)
 
     useEffect(() => {
-        const assets = getTotalByType(data, "asset");
-        setTotalAssets(assets);
+        const controller = new AbortController()
 
-        const liabilities = getTotalByType(data, "liability");
-        setTotalLiabilities(liabilities);
+        fetch(data_url, { signal: controller.signal })
+            .then((response) => {
+                if (!response.ok) throw new Error(`Request failed with status ${response.status}`)
+                return response.text()
+            })
+            .then((rawData) => {
+                const portfolio = parsePortfolioCSV(rawData)
+                setDate(portfolio.updatedAt)
+                setData(portfolio.accounts)
+                setStatus("success")
+                setError("")
+            })
+            .catch((fetchError) => {
+                if (fetchError.name === "AbortError") return
+                setStatus("error")
+                setError("We couldn’t load your latest account data.")
+            })
 
-        const netWorth = assets - liabilities;
-        setNetWorth(netWorth);
-    }, [data]);
+        return () => controller.abort()
+    }, [requestKey])
 
-    async function fetchCSV() {
-        let data_from_csv = [];
-        try {
-            const response = await fetch(data_url);
-            const raw_data = await response.text();
+    const categories = useMemo(() => data.reduce((groups, item) => {
+        if (groups[item.category]) groups[item.category].push(item)
+        return groups
+    }, createEmptyCategories()), [data])
 
-            const rows = raw_data.split("\n").map(row => row.split(","));
-            setDate(rows[0][1]);
-            rows.splice(0, 2)
+    const totalAssets = useMemo(() => getTotalByType(data, "asset"), [data])
+    const totalLiabilities = useMemo(() => getTotalByType(data, "liability"), [data])
+    const netWorth = totalAssets - totalLiabilities
+    const isLoading = status === "loading"
 
-            data_from_csv = rows.map(r => {
-                return {
-                    name: r[0],
-                    type: r[1],
-                    category: r[2].trim(),
-                    balance: parseFloat(r[3] || 0)
-                }
-            }).filter(d => d.balance !== 0);
-
-            const categorizedData = data_from_csv.reduce(
-                (acc, item) => {
-                    if (item.category === "checking") acc.checking.push(item);
-                    if (item.category === "saving") acc.saving.push(item);
-                    if (item.category === "investment") acc.investment.push(item);
-                    if (item.category === "retirement") acc.retirement.push(item);
-                    if (item.category === "rent") acc.rent.push(item);
-                    if (item.category === "cc") acc.cc.push(item);
-                    return acc;
-                },
-                { checking: [], saving: [], investment: [], retirement: [], rent: [], cc: [] }
-            );
-
-            setChecking(categorizedData.checking);
-            setSaving(categorizedData.saving);
-            setInvestment(categorizedData.investment);
-            setRetirement(categorizedData.retirement);
-            setRent(categorizedData.rent);
-            setCC(categorizedData.cc);
-
-            setData(data_from_csv);
-        } catch (err) {
-            console.error("Error fetching CSV:", err);
-        }
+    const handleRetry = () => {
+        setStatus("loading")
+        setError("")
+        setRequestKey((key) => key + 1)
     }
 
-    useEffect(() => {
-        fetchCSV();
-    }, []);
+    return (
+        <div className="home-container">
+            <main className="home-content">
+                <Header
+                    date={date}
+                    netWorth={netWorth}
+                    totalAssets={totalAssets}
+                    totalLiabilities={totalLiabilities}
+                    isLoading={isLoading}
+                    hasError={status === "error"}
+                    setIsAuthenticated={setIsAuthenticated}
+                />
 
-    if (isAuthenticated) {
-        return (
-            <div className="home-container">
-                <Logout />
-                <div className="home-content">
-                    <Header
-                        date={date}
-                        netWorth={netWorth}
-                        totalAssets={totalAssets}
-                        totalLiabilities={totalLiabilities}
-                    />
+                {status === "error" ? (
+                    <section className="dashboard-error" role="alert" aria-live="polite">
+                        <div className="dashboard-error-icon" aria-hidden="true">
+                            <AlertCircle size={22} />
+                        </div>
+                        <div>
+                            <h2>Couldn’t load your portfolio</h2>
+                            <p>{error} Check your connection and try again.</p>
+                        </div>
+                        <button type="button" onClick={handleRetry}>
+                            <RefreshCw size={16} aria-hidden="true" />
+                            Try again
+                        </button>
+                    </section>
+                ) : (
                     <Details
-                        checking={checking}
-                        saving={saving}
-                        investment={investment}
-                        retirement={retirement}
-                        rent={rent}
-                        cc={cc}
+                        categories={categories}
+                        totalAssets={totalAssets}
+                        isLoading={isLoading}
                     />
-                </div>
-            </div >
-        );
-    }
+                )}
+            </main>
+        </div>
+    )
 }

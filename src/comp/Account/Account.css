@@ -1,23 +1,36 @@
 .account-container {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 0;
+    gap: 20px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(52, 68, 95, 0.58);
 }
 
 .account-container:last-of-type {
-    border-bottom: none;
-    padding-bottom: 0;
+    border-bottom: 0;
 }
 
-.acoount-amount {
-    font-weight: bold;
+.account-name {
+    overflow: hidden;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-    &.liability {
-        color: #ff4d6d;
-    }
+.account-amount {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    font-weight: 680;
+    font-variant-numeric: tabular-nums;
+}
 
-    &.asset {
-        color: #22c55e;
-    }
+.account-amount.liability {
+    color: var(--liability);
+}
+
+.account-amount.asset {
+    color: var(--asset);
 }

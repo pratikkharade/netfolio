@@ -1,7 +1,37 @@
-.logout-icon {
-    right: 16px;
-    padding: 4px;
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    gap: 7px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-size: 0.74rem;
+    font-weight: 650;
+    background: transparent;
     cursor: pointer;
-    font-size: 20px;
-    position: absolute;
+    transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.logout-button:hover {
+    border-color: rgba(251, 113, 133, 0.35);
+    color: var(--liability);
+    background: var(--liability-soft);
+}
+
+@media (max-width: 520px) {
+    .logout-button {
+        min-height: 32px;
+        padding: 0 9px;
+    }
+
+    .logout-button span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+    }
 }

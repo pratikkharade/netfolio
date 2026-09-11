@@ -1,15 +1,13 @@
-import React from 'react';
-import "./Account.css";
+import { formatCurrency } from "../helpers.jsx"
+import "./Account.css"
 
-import { formatCurrency } from '../helpers.jsx';
-
-function Account({ name, balance, category, type }) {
+function Account({ name, balance, type }) {
     return (
-        <div className='account-container'>
-            <span>{name}</span>
-            <span className={`acoount-amount ${type}`}>{formatCurrency(balance)}</span>
+        <div className="account-container" role="listitem">
+            <span className="account-name" title={name}>{name}</span>
+            <span className={`account-amount ${type}`}>{formatCurrency(balance)}</span>
         </div>
-    );
+    )
 }
 
-export default Account;
+export default Account

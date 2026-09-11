@@ -1,17 +1,16 @@
-import React from "react";
+import { LogOut } from "lucide-react"
+import "./Logout.css"
 
-import "./Logout.css";
-
-export default function Logout() {
+export default function Logout({ setIsAuthenticated }) {
     const handleLogout = () => {
-        const confirmLogout = window.confirm("Are you sure you want to log out?");
-        if (!confirmLogout) return;
-        localStorage.setItem("auth", "false");
-        window.location.reload();
+        localStorage.setItem("auth", "false")
+        setIsAuthenticated(false)
     }
+
     return (
-        <div className="logout-icon" onClick={handleLogout}>
-            <i className="fa-solid fa-arrow-right-from-bracket"></i>
-        </div>
-    );
+        <button type="button" className="logout-button" onClick={handleLogout}>
+            <LogOut size={17} aria-hidden="true" />
+            <span>Log out</span>
+        </button>
+    )
 }

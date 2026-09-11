@@ -1,17 +1,14 @@
-import React from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from "lucide-react"
 
-function Chevron({ isExpanded, title }) {
+function Chevron({ isExpanded }) {
     return (
-        <button
-            type='button'
+        <span
             className={`carousel-toggle-btn ${isExpanded ? 'expanded' : 'collapsed'}`}
-            aria-label={isExpanded ? `Collapse ${title} ` : `Expand ${title} `}
-            aria-expanded={isExpanded}
+            aria-hidden="true"
         >
             <ChevronRight size={18} />
-        </button>
+        </span>
     )
 }
 
-export default Chevron;
+export default Chevron

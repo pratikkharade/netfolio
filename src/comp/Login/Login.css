@@ -1,37 +1,196 @@
 .login-page-wrapper {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #1e293b, #0f172a);
+    position: relative;
+    display: grid;
+    min-height: 100svh;
+    place-items: center;
+    overflow: hidden;
+    padding: 24px;
+    background:
+        linear-gradient(rgba(7, 12, 22, 0.76), rgba(7, 12, 22, 0.92)),
+        radial-gradient(circle at top, #18243a, var(--background-deep) 65%);
+}
+
+.login-page-wrapper::before {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    opacity: 0.45;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+.login-backdrop {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 999px;
+    pointer-events: none;
+    filter: blur(100px);
+    opacity: 0.13;
+}
+
+.login-backdrop-one {
+    top: -140px;
+    left: -80px;
+    background: var(--accent-strong);
+}
+
+.login-backdrop-two {
+    right: -110px;
+    bottom: -170px;
+    background: var(--asset);
 }
 
 .login-card {
-    background: #ffffff;
-    padding: 24px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    text-align: center;
+    position: relative;
+    z-index: 1;
+    width: min(100%, 410px);
+    padding: 34px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: rgba(17, 24, 39, 0.92);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(18px);
+}
+
+.login-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 22px;
+    border: 1px solid rgba(96, 165, 250, 0.28);
+    border-radius: 15px;
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.login-eyebrow {
+    margin-bottom: 7px;
+    color: var(--accent);
+    font-size: 0.68rem;
+    font-weight: 760;
+    letter-spacing: 0.17em;
+}
+
+.login-title {
+    margin-bottom: 9px;
+    font-size: 1.85rem;
+}
+
+.login-description {
+    margin-bottom: 27px;
+    color: var(--text-muted);
+    font-size: 0.86rem;
+    line-height: 1.55;
+}
+
+.login-form {
+    display: grid;
+}
+
+.login-label {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.74rem;
+    font-weight: 650;
 }
 
 .login-card-input {
     width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 8px;
-    text-align: center;
-    border: 1px solid #ddd;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 11px;
+    outline: none;
+    color: var(--text-primary);
+    background: var(--background-deep);
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.login-card-input::placeholder {
+    color: #64748b;
+}
+
+.login-card-input:hover,
+.login-card-input:focus {
+    border-color: rgba(96, 165, 250, 0.62);
+}
+
+.login-card-input.has-error {
+    border-color: rgba(251, 113, 133, 0.75);
+}
+
+.login-error {
+    margin: 8px 0 0;
+    color: var(--danger);
+    font-size: 0.72rem;
+    line-height: 1.4;
 }
 
 .login-card-button {
-    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 46px;
+    gap: 8px;
     margin-top: 15px;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    background: #2563eb;
-    color: white;
+    border: 0;
+    border-radius: 11px;
+    color: #06101f;
+    font-size: 0.8rem;
+    font-weight: 760;
+    background: var(--accent);
     cursor: pointer;
-    font-weight: 600;
+    transition: background-color 180ms ease, transform 180ms ease, opacity 180ms ease;
+}
+
+.login-card-button:hover:not(:disabled) {
+    background: #93c5fd;
+    transform: translateY(-1px);
+}
+
+.login-card-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.login-card-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.46;
+}
+
+.button-spinner {
+    animation: button-spin 800ms linear infinite;
+}
+
+.login-footnote {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin: 22px 0 0;
+    color: #718096;
+    font-size: 0.67rem;
+    text-align: center;
+}
+
+@keyframes button-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .login-page-wrapper {
+        align-items: center;
+        padding: 16px;
+    }
+
+    .login-card {
+        padding: 28px 23px;
+    }
 }
