@@ -1,13 +1,41 @@
-.header-container {
-    margin-bottom: 24px;
-}
-
 .app-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-height: 72px;
+    gap: 18px;
+    transition: min-height 200ms ease;
+}
+
+.app-bar::before {
+    position: absolute;
+    inset: 0 calc(50% - 50vw);
+    z-index: -1;
     border-bottom: 1px solid var(--border);
+    content: "";
+    background: rgba(11, 17, 32, 0.72);
+    backdrop-filter: blur(16px);
+    transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+
+.app-bar.is-scrolled {
+    min-height: 60px;
+}
+
+.app-bar.is-scrolled::before {
+    background: rgba(11, 17, 32, 0.94);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
+.app-bar-identity {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0;
 }
 
 .brand {
@@ -34,14 +62,99 @@
     background: var(--accent-soft);
 }
 
+.compact-net-worth {
+    display: flex;
+    max-width: 0;
+    align-items: baseline;
+    gap: 8px;
+    overflow: hidden;
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0 solid transparent;
+    opacity: 0;
+    visibility: hidden;
+    white-space: nowrap;
+    transform: translateX(-8px);
+    transition: max-width 220ms ease, margin-left 220ms ease, padding-left 220ms ease,
+        border-color 220ms ease, opacity 160ms ease, transform 220ms ease, visibility 0s linear 220ms;
+}
+
+.app-bar.is-scrolled .compact-net-worth {
+    max-width: 260px;
+    margin-left: 14px;
+    padding-left: 14px;
+    border-left-width: 1px;
+    border-left-color: var(--border);
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition-delay: 0s;
+}
+
+.compact-net-worth > span {
+    color: var(--text-muted);
+    font-size: 0.66rem;
+}
+
+.compact-net-worth strong {
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+}
+
 .app-bar-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
+}
+
+.app-bar-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.refresh-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    gap: 7px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-size: 0.74rem;
+    font-weight: 650;
+    background: transparent;
+    cursor: pointer;
+    transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease, opacity 180ms ease;
+}
+
+.refresh-button:hover:not(:disabled) {
+    border-color: rgba(96, 165, 250, 0.38);
+    color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.refresh-button:disabled {
+    cursor: wait;
+    opacity: 0.62;
+}
+
+.refresh-icon.spinning {
+    animation: refresh-spin 800ms linear infinite;
+}
+
+@keyframes refresh-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .summary-section {
     padding-top: 38px;
+    margin-bottom: 24px;
     scroll-margin-top: 20px;
 }
 
@@ -179,7 +292,76 @@
         gap: 6px;
     }
 
+    .app-bar.is-scrolled {
+        align-items: center;
+        min-height: 56px;
+        padding: 9px 0;
+    }
+
+    .app-bar.is-scrolled .app-bar-actions {
+        align-items: center;
+        flex-direction: row;
+    }
+
+    .app-bar.is-scrolled .last-updated {
+        display: none;
+    }
+
+    .app-bar.is-scrolled .compact-net-worth {
+        max-width: 145px;
+        margin-left: 10px;
+        padding-left: 10px;
+    }
+
+    .compact-net-worth > span {
+        display: none;
+    }
+
+    .compact-net-worth strong {
+        font-size: 0.9rem;
+    }
+
+    .refresh-button,
+    .logout-button {
+        min-width: 34px;
+        padding: 0 8px;
+    }
+
+    .refresh-button span,
+    .logout-button span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+    }
+
     .summary-secondary-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 390px) {
+    .brand {
+        gap: 7px;
+        font-size: 0.9rem;
+    }
+
+    .brand-mark {
+        width: 31px;
+        height: 31px;
+    }
+
+    .app-bar.is-scrolled .compact-net-worth {
+        max-width: 105px;
+        margin-left: 8px;
+        padding-left: 8px;
+    }
+
+    .compact-net-worth strong {
+        max-width: 78px;
+        overflow: hidden;
+        font-size: 0.82rem;
+        text-overflow: ellipsis;
     }
 }

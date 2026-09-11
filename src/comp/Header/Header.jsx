@@ -1,32 +1,63 @@
-import { WalletCards } from "lucide-react"
+import { useEffect, useState } from "react"
+import { RefreshCw, WalletCards } from "lucide-react"
 import Card from "../Card/Card.jsx"
 import Date from "../Date/Date.jsx"
 import Loading from "../Loading/Loading.jsx"
 import Logout from "../Logout/Logout.jsx"
+import { formatCurrency } from "../helpers.jsx"
 import "./Header.css"
 
-function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasError, setIsAuthenticated }) {
+const COMPACT_HEADER_AFTER = 96
+
+function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasError, onRefresh, setIsAuthenticated }) {
+    const [isScrolled, setIsScrolled] = useState(() => window.scrollY > COMPACT_HEADER_AFTER)
     const grossPosition = totalAssets + totalLiabilities
     const assetShare = grossPosition > 0 ? (totalAssets / grossPosition) * 100 : 100
     const liabilityShare = grossPosition > 0 ? (totalLiabilities / grossPosition) * 100 : 0
 
+    useEffect(() => {
+        const handleScroll = () => setIsScrolled(window.scrollY > COMPACT_HEADER_AFTER)
+
+        window.addEventListener("scroll", handleScroll, { passive: true })
+        return () => window.removeEventListener("scroll", handleScroll)
+    }, [])
+
     return (
-        <header className="header-container">
-            <div className="app-bar">
-                <a className="brand" href="#top" aria-label="NetFolio dashboard home">
-                    <span className="brand-mark" aria-hidden="true">
-                        <WalletCards size={20} />
-                    </span>
-                    <span>NetFolio</span>
-                </a>
+        <>
+            <header className={`app-bar ${isScrolled ? "is-scrolled" : ""}`}>
+                <div className="app-bar-identity">
+                    <a className="brand" href="#top" aria-label="NetFolio dashboard home">
+                        <span className="brand-mark" aria-hidden="true">
+                            <WalletCards size={20} />
+                        </span>
+                        <span>NetFolio</span>
+                    </a>
+
+                    <div className="compact-net-worth" aria-hidden={!isScrolled}>
+                        <span>Net worth</span>
+                        <strong>{isLoading ? <Loading variant="compact" /> : formatCurrency(netWorth)}</strong>
+                    </div>
+                </div>
 
                 <div className="app-bar-actions">
                     <Date date={date} isLoading={isLoading} hasError={hasError} />
-                    <Logout setIsAuthenticated={setIsAuthenticated} />
+                    <div className="app-bar-buttons">
+                        <button
+                            type="button"
+                            className="refresh-button"
+                            onClick={onRefresh}
+                            disabled={isLoading}
+                            aria-label={isLoading ? "Refreshing portfolio data" : "Refresh portfolio data"}
+                        >
+                            <RefreshCw className={isLoading ? "refresh-icon spinning" : "refresh-icon"} size={17} aria-hidden="true" />
+                            <span>{isLoading ? "Refreshing…" : "Refresh"}</span>
+                        </button>
+                        <Logout setIsAuthenticated={setIsAuthenticated} />
+                    </div>
                 </div>
-            </div>
+            </header>
 
-            {!hasError && <section id="top" className="summary-section" aria-labelledby="overview-title">
+            {!hasError && <section className="summary-section" aria-labelledby="overview-title">
                 <div className="section-heading summary-heading">
                     <div>
                         <p className="section-eyebrow">OVERVIEW</p>
@@ -61,7 +92,7 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                     </div>
                 </div>
             </section>}
-        </header>
+        </>
     )
 }
 

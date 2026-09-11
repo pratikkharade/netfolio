@@ -1,7 +1,7 @@
 .home-container {
     position: relative;
     min-height: 100svh;
-    overflow: hidden;
+    overflow-x: clip;
     background:
         radial-gradient(circle at 4% 0%, rgba(59, 130, 246, 0.09), transparent 30rem),
         radial-gradient(circle at 96% 24%, rgba(52, 211, 153, 0.05), transparent 26rem),
@@ -33,6 +33,7 @@
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 16px;
+    margin-top: 24px;
     padding: 20px;
     border: 1px solid rgba(251, 113, 133, 0.32);
     border-radius: var(--radius-lg);

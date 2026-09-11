@@ -4,6 +4,7 @@ import { data_url } from "../../config.jsx"
 import { getTotalByType } from "../helpers.jsx"
 import Details from "../Details/Details.jsx"
 import Header from "../Header/Header.jsx"
+import ScrollToTop from "../ScrollToTop/ScrollToTop.jsx"
 import "./Home.css"
 
 const EMPTY_CATEGORIES = {
@@ -51,7 +52,10 @@ export default function FinanceApp({ setIsAuthenticated }) {
     useEffect(() => {
         const controller = new AbortController()
 
-        fetch(data_url, { signal: controller.signal })
+        fetch(`${data_url}&t=${Date.now()}`, {
+            signal: controller.signal,
+            cache: "no-store",
+        })
             .then((response) => {
                 if (!response.ok) throw new Error(`Request failed with status ${response.status}`)
                 return response.text()
@@ -82,7 +86,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
     const netWorth = totalAssets - totalLiabilities
     const isLoading = status === "loading"
 
-    const handleRetry = () => {
+    const handleRefresh = () => {
         setStatus("loading")
         setError("")
         setRequestKey((key) => key + 1)
@@ -90,7 +94,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
 
     return (
         <div className="home-container">
-            <main className="home-content">
+            <main id="top" className="home-content">
                 <Header
                     date={date}
                     netWorth={netWorth}
@@ -98,6 +102,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
                     totalLiabilities={totalLiabilities}
                     isLoading={isLoading}
                     hasError={status === "error"}
+                    onRefresh={handleRefresh}
                     setIsAuthenticated={setIsAuthenticated}
                 />
 
@@ -110,7 +115,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
                             <h2>Couldn’t load your portfolio</h2>
                             <p>{error} Check your connection and try again.</p>
                         </div>
-                        <button type="button" onClick={handleRetry}>
+                        <button type="button" onClick={handleRefresh}>
                             <RefreshCw size={16} aria-hidden="true" />
                             Try again
                         </button>
@@ -123,6 +128,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
                     />
                 )}
             </main>
+            <ScrollToTop />
         </div>
     )
 }
