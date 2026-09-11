@@ -51,6 +51,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
 
     useEffect(() => {
         const controller = new AbortController()
+        let isCancelled = false
 
         fetch(`${data_url}&t=${Date.now()}`, {
             signal: controller.signal,
@@ -60,10 +61,12 @@ export default function FinanceApp({ setIsAuthenticated }) {
                 if (!response.ok) throw new Error(`Request failed with status ${response.status}`)
                 return response.text()
             })
-            .then((rawData) => {
-                const portfolio = parsePortfolioCSV(rawData)
-                setDate(portfolio.updatedAt)
-                setData(portfolio.accounts)
+            .then(parsePortfolioCSV)
+            .then((spreadsheetPortfolio) => {
+                if (isCancelled) return
+
+                setDate(spreadsheetPortfolio.updatedAt)
+                setData(spreadsheetPortfolio.accounts)
                 setStatus("success")
                 setError("")
             })
@@ -73,7 +76,10 @@ export default function FinanceApp({ setIsAuthenticated }) {
                 setError("We couldn’t load your latest account data.")
             })
 
-        return () => controller.abort()
+        return () => {
+            isCancelled = true
+            controller.abort()
+        }
     }, [requestKey])
 
     const categories = useMemo(() => data.reduce((groups, item) => {

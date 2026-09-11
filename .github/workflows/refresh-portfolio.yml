@@ -1,0 +1,44 @@
+name: Refresh portfolio
+
+on:
+  schedule:
+    - cron: "0 0,6,12,18 * * *"
+      timezone: "America/Denver"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-portfolio
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch Plaid balances and update Google Sheet
+        env:
+          PLAID_ENV: production
+          PLAID_CLIENT_ID: ${{ secrets.PLAID_CLIENT_ID }}
+          PLAID_PRODUCTION_SECRET: ${{ secrets.PLAID_PRODUCTION_SECRET }}
+          PLAID_US_BANK_ACCESS_TOKEN: ${{ secrets.PLAID_US_BANK_ACCESS_TOKEN }}
+          PLAID_CHASE_ACCESS_TOKEN: ${{ secrets.PLAID_CHASE_ACCESS_TOKEN }}
+          PLAID_ROBINHOOD_ACCESS_TOKEN: ${{ secrets.PLAID_ROBINHOOD_ACCESS_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SPREADSHEET_ID: ${{ secrets.GOOGLE_SPREADSHEET_ID }}
+        run: npm run portfolio:sync

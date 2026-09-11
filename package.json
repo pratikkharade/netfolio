@@ -6,6 +6,8 @@
   "homepage": "https://pratikkharade.github.io/netfolio",
   "scripts": {
     "dev": "vite",
+    "plaid:fetch": "node scripts/fetch-plaid.mjs",
+    "portfolio:sync": "node scripts/update-google-sheet.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -31,6 +33,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "gh-pages": "^6.3.0",
     "globals": "^17.4.0",
+    "googleapis": "^180.0.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^3.4.1",
     "vite": "^8.0.1"
