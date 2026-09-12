@@ -1,10 +1,11 @@
-import { CarFront, House, UserRound, WalletCards } from "lucide-react"
+import { CarFront, House, Target, UserRound, WalletCards } from "lucide-react"
 import "./BottomNav.css"
 
 const navigationItems = [
     { id: "home", label: "Home", Icon: House },
     { id: "accounts", label: "Accounts", Icon: WalletCards },
     { id: "loan", label: "Auto Loan", Icon: CarFront },
+    { id: "goals", label: "Goals", Icon: Target },
     { id: "profile", label: "Profile", Icon: UserRound },
 ]
 

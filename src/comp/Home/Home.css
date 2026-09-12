@@ -50,6 +50,7 @@
 }
 
 .app-view-accounts,
+.app-view-goals,
 .app-view-loan {
     display: grid;
     align-content: start;

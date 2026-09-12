@@ -9,8 +9,8 @@
 
 .bottom-nav {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    width: min(100%, 560px);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: min(100%, 680px);
     min-height: 66px;
     margin: 0 auto;
 }
@@ -31,6 +31,7 @@
     background: transparent;
     cursor: pointer;
     transition: color 160ms ease, background-color 160ms ease;
+    white-space: nowrap;
 }
 
 .bottom-nav button::before {

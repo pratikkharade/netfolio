@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { AlertCircle, Clock3, RefreshCw } from "lucide-react"
-import { data_url, loan_history_url, loan_summary_url } from "../../config.jsx"
+import { data_url, goals_url, loan_history_url, loan_summary_url } from "../../config.jsx"
 import { getTotalByType } from "../helpers.jsx"
 import BottomNav from "../BottomNav/BottomNav.jsx"
 import Details from "../Details/Details.jsx"
+import Goals from "../Goals/Goals.jsx"
+import { parseGoalsCSV } from "../Goals/goalsData.js"
 import Header from "../Header/Header.jsx"
 import LoanDetails from "../Loan/LoanDetails.jsx"
 import Overview from "../Overview/Overview.jsx"
@@ -26,6 +28,7 @@ const VALUES_HIDDEN_KEY = "netfolio-values-hidden"
 const VIEW_HASHES = {
     home: "#home",
     accounts: "#accounts",
+    goals: "#goals",
     loan: "#auto-loan",
     profile: "#profile",
 }
@@ -79,6 +82,9 @@ export default function FinanceApp({ setIsAuthenticated, theme, onThemeChange })
     const [loanData, setLoanData] = useState(null)
     const [loanStatus, setLoanStatus] = useState("loading")
     const [loanError, setLoanError] = useState("")
+    const [goalDefinitions, setGoalDefinitions] = useState([])
+    const [goalsStatus, setGoalsStatus] = useState("loading")
+    const [goalsError, setGoalsError] = useState("")
     const [hideValues, setHideValues] = useState(
         () => localStorage.getItem(VALUES_HIDDEN_KEY) === "true"
     )
@@ -147,6 +153,23 @@ export default function FinanceApp({ setIsAuthenticated, theme, onThemeChange })
                 setLoanError("Make both loan tabs available to anyone with the link, then refresh.")
             })
 
+        fetchCSV(goals_url, controller.signal)
+            .then(parseGoalsCSV)
+            .then((nextGoals) => {
+                if (nextGoals.length === 0) throw new Error("The goals tab does not contain any enabled goals.")
+                if (isCancelled) return
+
+                setGoalDefinitions(nextGoals)
+                setGoalsStatus("success")
+                setGoalsError("")
+            })
+            .catch((fetchError) => {
+                if (fetchError.name === "AbortError") return
+                setGoalDefinitions([])
+                setGoalsStatus("error")
+                setGoalsError(fetchError.message || "Check the goals tab and refresh again.")
+            })
+
         return () => {
             isCancelled = true
             controller.abort()
@@ -171,6 +194,8 @@ export default function FinanceApp({ setIsAuthenticated, theme, onThemeChange })
         setError("")
         setLoanStatus("loading")
         setLoanError("")
+        setGoalsStatus("loading")
+        setGoalsError("")
         setRequestKey((key) => key + 1)
     }
 
@@ -238,6 +263,19 @@ export default function FinanceApp({ setIsAuthenticated, theme, onThemeChange })
                             totalAssets={totalAssets}
                             totalLiabilities={totalLiabilities}
                             isLoading={isLoading}
+                            hideValues={hideValues}
+                        />
+                    ) : activeView === "goals" ? (
+                        <Goals
+                            definitions={goalDefinitions}
+                            accounts={data}
+                            metrics={{
+                                "net worth": netWorth,
+                                "total assets": totalAssets,
+                                "total liabilities": totalLiabilities,
+                            }}
+                            status={goalsStatus === "error" || status === "error" ? "error" : goalsStatus === "loading" || status === "loading" ? "loading" : "success"}
+                            error={goalsStatus === "error" ? goalsError : error}
                             hideValues={hideValues}
                         />
                     ) : activeView === "loan" ? (

@@ -7,3 +7,4 @@ const loan_sheet_base_url = `https://docs.google.com/spreadsheets/d/${loan_sheet
 
 export const loan_summary_url = `${loan_sheet_base_url}&gid=0`;
 export const loan_history_url = `${loan_sheet_base_url}&gid=362788315`;
+export const goals_url = `https://docs.google.com/spreadsheets/d/${loan_sheet_id}/gviz/tq?tqx=out:csv&sheet=goals`;
