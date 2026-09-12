@@ -2,7 +2,7 @@ name: Refresh portfolio
 
 on:
   schedule:
-    - cron: "0 0,6,12,18 * * *"
+    - cron: "7 0,6,12,18 * * *"
       timezone: "America/Denver"
   workflow_dispatch:
 
