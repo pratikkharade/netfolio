@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Database, LoaderCircle, LockKeyhole } from "lucide-react"
+import { Database, LoaderCircle } from "lucide-react"
 import { generateHash, fetchStoredHash } from "../helpers.jsx"
 import "./Login.css"
 
@@ -40,7 +40,7 @@ function Login({ setIsAuthenticated }) {
 
             <section className="login-card" aria-labelledby="login-title">
                 <div className="login-brand-mark" aria-hidden="true">
-                    <LockKeyhole size={26} strokeWidth={2} />
+                    <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" />
                 </div>
 
                 <p className="login-eyebrow">NETFOLIO</p>

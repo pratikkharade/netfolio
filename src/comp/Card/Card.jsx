@@ -10,7 +10,7 @@ const toneIcons = {
     loan: CarFront,
 }
 
-function Card({ title, value, tone = "primary", featured = false, isLoading = false, children }) {
+function Card({ title, value, tone = "primary", featured = false, isLoading = false, hideValue = false, children }) {
     const Icon = toneIcons[tone]
 
     return (
@@ -22,7 +22,7 @@ function Card({ title, value, tone = "primary", featured = false, isLoading = fa
             <div className="card-value">
                 {isLoading
                     ? <Loading variant="value" />
-                    : Number.isFinite(value) ? formatCurrency(value) : "Unavailable"}
+                    : Number.isFinite(value) ? (hideValue ? "XXXXX" : formatCurrency(value)) : "Unavailable"}
             </div>
             {children}
         </article>

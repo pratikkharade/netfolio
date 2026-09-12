@@ -14,7 +14,7 @@ const accountGroups = [
     { key: "cc", type: "liability", title: "Credit cards" },
 ]
 
-function Details({ categories, totalAssets, isLoading, loanData, loanStatus, loanError }) {
+function Details({ categories, totalAssets, isLoading, loanData, loanStatus, loanError, hideValues }) {
     const [view, setView] = useState("accounts")
 
     return (
@@ -46,7 +46,7 @@ function Details({ categories, totalAssets, isLoading, loanData, loanStatus, loa
 
             <div id="account-details-panel" role="tabpanel" aria-labelledby="account-details-tab" hidden={view !== "accounts"}>
                 <div className="dashboard-grid">
-                    <Allocation categories={categories} totalAssets={totalAssets} isLoading={isLoading} />
+                    <Allocation categories={categories} totalAssets={totalAssets} isLoading={isLoading} hideValues={hideValues} />
 
                     <section className="details-container" aria-labelledby="accounts-title">
                         <div className="details-heading">
@@ -64,6 +64,7 @@ function Details({ categories, totalAssets, isLoading, loanData, loanStatus, loa
                                     title={group.title}
                                     data={categories[group.key]}
                                     isLoading={isLoading}
+                                    hideValues={hideValues}
                                 />
                             ))}
                         </div>
@@ -76,6 +77,7 @@ function Details({ categories, totalAssets, isLoading, loanData, loanStatus, loa
                     loanData={loanData}
                     status={loanStatus}
                     error={loanError}
+                    hideValues={hideValues}
                 />
             </div>
         </>

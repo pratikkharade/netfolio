@@ -4,8 +4,8 @@ import { formatCurrency } from "../helpers.jsx"
 import Loading from "../Loading/Loading.jsx"
 import "./LoanDetails.css"
 
-function displayCurrency(value) {
-    return Number.isFinite(value) ? formatCurrency(value) : "—"
+function displayCurrency(value, hideValues) {
+    return Number.isFinite(value) ? (hideValues ? "XXXXX" : formatCurrency(value)) : "—"
 }
 
 function displayDate(value) {
@@ -17,7 +17,7 @@ function displayDate(value) {
     return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })
 }
 
-function LoanDetails({ loanData, status, error }) {
+function LoanDetails({ loanData, status, error, hideValues }) {
     const [view, setView] = useState("overview")
     const summary = loanData?.summary
     const payments = loanData?.payments || []
@@ -84,8 +84,8 @@ function LoanDetails({ loanData, status, error }) {
                     <div className="loan-payoff-summary">
                         <span>Balance principal</span>
                         <div className="loan-balance-row">
-                            <strong>{displayCurrency(summary.currentBalance)}</strong>
-                            {summary.principalPaid !== null && <span>{displayCurrency(summary.principalPaid)} paid</span>}
+                            <strong>{displayCurrency(summary.currentBalance, hideValues)}</strong>
+                            {summary.principalPaid !== null && <span>{displayCurrency(summary.principalPaid, hideValues)} paid</span>}
                         </div>
                         <div
                             className="loan-progress-track"
@@ -93,27 +93,27 @@ function LoanDetails({ loanData, status, error }) {
                             aria-label="Auto loan payoff progress"
                             aria-valuemin="0"
                             aria-valuemax="100"
-                            aria-valuenow={hasPayoffProgress ? Math.round(paidPercentage) : undefined}
-                            aria-valuetext={hasPayoffProgress ? undefined : "Payoff progress unavailable"}
+                            aria-valuenow={!hideValues && hasPayoffProgress ? Math.round(paidPercentage) : undefined}
+                            aria-valuetext={hideValues ? "Payoff progress hidden" : hasPayoffProgress ? undefined : "Payoff progress unavailable"}
                         >
                             <span style={{ width: `${paidPercentage}%` }} />
                         </div>
                         <div className="loan-progress-labels">
-                            <span>Started at {displayCurrency(summary.originalBalance)}</span>
-                            <span>{hasPayoffProgress ? `${paidPercentage.toFixed(1)}% complete` : "Progress unavailable"}</span>
+                            <span>Started at {displayCurrency(summary.originalBalance, hideValues)}</span>
+                            <span>{hideValues ? "XXXXX complete" : hasPayoffProgress ? `${paidPercentage.toFixed(1)}% complete` : "Progress unavailable"}</span>
                         </div>
                     </div>
 
                     <div className="loan-next-payment">
                         <span>Last payment · {displayDate(summary.lastPaymentDate)}</span>
-                        <strong>{displayCurrency(summary.monthlyPayment)}</strong>
+                        <strong>{displayCurrency(summary.monthlyPayment, hideValues)}</strong>
                         <p>Estimated payoff: {displayDate(summary.estimatedPayoff)}</p>
                     </div>
                 </div>
 
                 <div className="loan-facts">
-                    <div><span>Interest rate</span><strong>{summary.apr !== null ? `${summary.apr.toFixed(2)}% APR` : "—"}</strong></div>
-                    <div><span>Paid Off</span><strong>{displayCurrency(summary.principalPaid)}</strong></div>
+                    <div><span>Interest rate</span><strong>{summary.apr !== null ? (hideValues ? "XXXXX" : `${summary.apr.toFixed(2)}% APR`) : "—"}</strong></div>
+                    <div><span>Paid Off</span><strong>{displayCurrency(summary.principalPaid, hideValues)}</strong></div>
                     <div><span>Next payment</span><strong>{displayDate(summary.nextDueDate)}</strong></div>
                 </div>
             </div>
@@ -134,9 +134,9 @@ function LoanDetails({ loanData, status, error }) {
                                 {payments.map((payment, index) => (
                                     <tr key={`${payment.paymentDate}-${index}`}>
                                         <td>{displayDate(payment.paymentDate)}</td>
-                                        <td>{displayCurrency(payment.startingBalance)}</td>
-                                        <td>{displayCurrency(payment.payment)}</td>
-                                        <td>{displayCurrency(payment.endingBalance)}</td>
+                                        <td>{displayCurrency(payment.startingBalance, hideValues)}</td>
+                                        <td>{displayCurrency(payment.payment, hideValues)}</td>
+                                        <td>{displayCurrency(payment.endingBalance, hideValues)}</td>
                                     </tr>
                                 ))}
                             </tbody>

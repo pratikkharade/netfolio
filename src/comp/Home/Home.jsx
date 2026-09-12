@@ -61,6 +61,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
     const [loanData, setLoanData] = useState(null)
     const [loanStatus, setLoanStatus] = useState("loading")
     const [loanError, setLoanError] = useState("")
+    const [hideValues, setHideValues] = useState(true)
 
     useEffect(() => {
         const controller = new AbortController()
@@ -145,6 +146,8 @@ export default function FinanceApp({ setIsAuthenticated }) {
                     setIsAuthenticated={setIsAuthenticated}
                     loanSummary={loanData?.summary}
                     loanStatus={loanStatus}
+                    hideValues={hideValues}
+                    onToggleValues={() => setHideValues((hidden) => !hidden)}
                 />
 
                 {status === "error" ? (
@@ -169,6 +172,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
                         loanData={loanData}
                         loanStatus={loanStatus}
                         loanError={loanError}
+                        hideValues={hideValues}
                     />
                 )}
             </main>

@@ -5,7 +5,7 @@ import Chevron from "./Chevron.jsx"
 import { formatCurrency } from "../helpers.jsx"
 import "./Carousel.css"
 
-function Carousel({ type, title, data, isLoading }) {
+function Carousel({ type, title, data, isLoading, hideValues }) {
     const [isExpanded, setIsExpanded] = useState(false)
     const contentId = useId()
     const total = data.reduce((sum, item) => sum + item.balance, 0)
@@ -26,7 +26,7 @@ function Carousel({ type, title, data, isLoading }) {
                         {!isLoading && <span className="account-count">{data.length}</span>}
                     </div>
                     <span className={`carousel-total ${type}`}>
-                        {isLoading ? <Loading variant="inline" /> : formatCurrency(total)}
+                        {isLoading ? <Loading variant="inline" /> : hideValues ? "XXXXX" : formatCurrency(total)}
                     </span>
                 </div>
                 <Chevron isExpanded={isExpanded} />
@@ -44,6 +44,7 @@ function Carousel({ type, title, data, isLoading }) {
                             name={account.name}
                             balance={account.balance}
                             type={account.type}
+                            hideValue={hideValues}
                         />
                     )) : (
                         <p className="accounts-empty">No accounts in this category.</p>

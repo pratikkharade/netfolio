@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { RefreshCw, WalletCards } from "lucide-react"
+import { Eye, EyeOff, RefreshCw } from "lucide-react"
 import Card from "../Card/Card.jsx"
 import Date from "../Date/Date.jsx"
 import Loading from "../Loading/Loading.jsx"
@@ -9,7 +9,7 @@ import "./Header.css"
 
 const COMPACT_HEADER_AFTER = 96
 
-function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasError, onRefresh, setIsAuthenticated, loanSummary, loanStatus }) {
+function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasError, onRefresh, setIsAuthenticated, loanSummary, loanStatus, hideValues, onToggleValues }) {
     const [isScrolled, setIsScrolled] = useState(() => window.scrollY > COMPACT_HEADER_AFTER)
     const grossPosition = totalAssets + totalLiabilities
     const assetShare = grossPosition > 0 ? (totalAssets / grossPosition) * 100 : 100
@@ -29,14 +29,14 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                 <div className="app-bar-identity">
                     <a className="brand" href="#top" aria-label="NetFolio dashboard home">
                         <span className="brand-mark" aria-hidden="true">
-                            <WalletCards size={20} />
+                            <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" />
                         </span>
                         <span>NetFolio</span>
                     </a>
 
                     <div className="compact-net-worth" aria-hidden={!isScrolled}>
                         <span>Net worth</span>
-                        <strong>{isLoading ? <Loading variant="compact" /> : formatCurrency(netWorth)}</strong>
+                        <strong>{isLoading ? <Loading variant="compact" /> : hideValues ? "XXXXX" : formatCurrency(netWorth)}</strong>
                     </div>
                 </div>
 
@@ -64,6 +64,17 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                         <p className="section-eyebrow">OVERVIEW</p>
                         <h1 id="overview-title">Pratik's Finances</h1>
                     </div>
+                    <button
+                        type="button"
+                        className="privacy-toggle"
+                        role="switch"
+                        aria-checked={hideValues}
+                        aria-label={hideValues ? "Show financial values" : "Hide financial values"}
+                        title={hideValues ? "Show financial values" : "Hide financial values"}
+                        onClick={onToggleValues}
+                    >
+                        {hideValues ? <Eye size={16} aria-hidden="true" /> : <EyeOff size={16} aria-hidden="true" />}
+                    </button>
                 </div>
 
                 <div className="summary-grid">
@@ -73,8 +84,9 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                         tone="primary"
                         featured
                         isLoading={isLoading}
+                        hideValue={hideValues}
                     >
-                        {isLoading ? <Loading variant="composition" /> : <div className="composition" aria-label={`${assetShare.toFixed(0)}% assets and ${liabilityShare.toFixed(0)}% liabilities`}>
+                        {isLoading ? <Loading variant="composition" /> : <div className="composition" aria-label={hideValues ? "Asset and liability values hidden" : `${assetShare.toFixed(0)}% assets and ${liabilityShare.toFixed(0)}% liabilities`}>
                             <div className="composition-labels">
                                 <span><i className="composition-dot asset-dot" />Assets</span>
                                 <span><i className="composition-dot liability-dot" />Liabilities</span>
@@ -87,8 +99,8 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                     </Card>
 
                     <div className="summary-secondary-grid">
-                        <Card title="Total assets" value={totalAssets} tone="asset" isLoading={isLoading} />
-                        <Card title="Total liabilities" value={totalLiabilities} tone="liability" isLoading={isLoading} />
+                        <Card title="Total assets" value={totalAssets} tone="asset" isLoading={isLoading} hideValue={hideValues} />
+                        <Card title="Total liabilities" value={totalLiabilities} tone="liability" isLoading={isLoading} hideValue={hideValues} />
                     </div>
 
                     <Card
@@ -96,13 +108,14 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                         value={loanSummary?.currentBalance}
                         tone="loan"
                         isLoading={loanStatus === "loading"}
+                        hideValue={hideValues}
                     >
                         {loanStatus === "success" && hasLoanProgress && (
                             <div className="loan-summary-completion">
                                 <div className="loan-summary-track" aria-hidden="true">
                                     <span style={{ width: `${loanSummary?.paidPercentage ?? 0}%` }} />
                                 </div>
-                                <span>{(loanSummary?.paidPercentage ?? 0).toFixed(1)}% paid off</span>
+                                <span>{hideValues ? "XXXXX paid off" : `${(loanSummary?.paidPercentage ?? 0).toFixed(1)}% paid off`}</span>
                             </div>
                         )}
                         {loanStatus === "success" && !hasLoanProgress && <p className="loan-summary-error">Tracked separately</p>}

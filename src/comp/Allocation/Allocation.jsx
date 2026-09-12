@@ -41,7 +41,7 @@ function getSliceOffset(angle) {
     }
 }
 
-function Allocation({ categories, totalAssets, isLoading }) {
+function Allocation({ categories, totalAssets, isLoading, hideValues }) {
     const [view, setView] = useState("pie")
     const [hoveredSlice, setHoveredSlice] = useState(null)
     const [selectedSlice, setSelectedSlice] = useState(null)
@@ -69,6 +69,11 @@ function Allocation({ categories, totalAssets, isLoading }) {
     const nextViewLabel = isPieView ? "bar chart" : "pie chart"
     const activeSliceKey = hoveredSlice || selectedSlice
     const activeItem = allocation.find((item) => item.key === activeSliceKey)
+    const displayCurrency = (value) => hideValues ? "XXXXX" : formatCurrency(value)
+    const displayPercentage = (value) => hideValues ? "XXXXX" : `${value.toFixed(0)}%`
+    const describeItem = (item) => hideValues
+        ? `${item.label}: values hidden`
+        : `${item.label}: ${formatCurrency(item.value)}, ${item.percentage.toFixed(0)}% of assets`
 
     const toggleSlice = (key) => {
         setSelectedSlice((selected) => selected === key ? null : key)
@@ -118,7 +123,7 @@ function Allocation({ categories, totalAssets, isLoading }) {
                                         className="allocation-pie-svg allocation-pie-face"
                                         viewBox="0 0 240 240"
                                         role="img"
-                                        aria-label={allocation.map((item) => (
+                                        aria-label={hideValues ? "Asset allocation values hidden" : allocation.map((item) => (
                                             `${item.label}: ${item.percentage.toFixed(0)}%`
                                         )).join(", ")}
                                     >
@@ -137,7 +142,7 @@ function Allocation({ categories, totalAssets, isLoading }) {
                                                     style={{ transform }}
                                                     role="button"
                                                     tabIndex="0"
-                                                    aria-label={`${item.label}: ${formatCurrency(item.value)}, ${item.percentage.toFixed(0)}% of assets`}
+                                                    aria-label={describeItem(item)}
                                                     aria-pressed={selectedSlice === item.key}
                                                     onMouseEnter={() => setHoveredSlice(item.key)}
                                                     onMouseLeave={() => setHoveredSlice(null)}
@@ -146,7 +151,7 @@ function Allocation({ categories, totalAssets, isLoading }) {
                                                     onClick={() => toggleSlice(item.key)}
                                                     onKeyDown={(event) => handleSliceKeyDown(event, item.key)}
                                                 >
-                                                    <title>{`${item.label}: ${formatCurrency(item.value)} (${item.percentage.toFixed(0)}%)`}</title>
+                                                    <title>{hideValues ? `${item.label}: values hidden` : `${item.label}: ${formatCurrency(item.value)} (${item.percentage.toFixed(0)}%)`}</title>
                                                 </path>
                                             )
                                         })}
@@ -156,7 +161,7 @@ function Allocation({ categories, totalAssets, isLoading }) {
                                     {activeItem ? (
                                         <>
                                             <strong>{activeItem.label}</strong>
-                                            <span>{formatCurrency(activeItem.value)} · {activeItem.percentage.toFixed(0)}%</span>
+                                            <span>{hideValues ? "XXXXX" : `${formatCurrency(activeItem.value)} · ${activeItem.percentage.toFixed(0)}%`}</span>
                                         </>
                                     ) : <span>Hover or tap a slice</span>}
                                 </div>
@@ -180,8 +185,8 @@ function Allocation({ categories, totalAssets, isLoading }) {
                                             <span>{item.label}</span>
                                         </div>
                                         <div className="allocation-values">
-                                            <span>{formatCurrency(item.value)}</span>
-                                            <span>{item.percentage.toFixed(0)}%</span>
+                                            <span>{displayCurrency(item.value)}</span>
+                                            <span>{displayPercentage(item.percentage)}</span>
                                         </div>
                                     </button>
                                 ))}
@@ -202,14 +207,14 @@ function Allocation({ categories, totalAssets, isLoading }) {
                                         <span>{item.label}</span>
                                     </div>
                                     <div className="allocation-values">
-                                        <span>{formatCurrency(item.value)}</span>
-                                        <span>{item.percentage.toFixed(0)}%</span>
+                                        <span>{displayCurrency(item.value)}</span>
+                                        <span>{displayPercentage(item.percentage)}</span>
                                     </div>
                                 </div>
                                 <div
                                     className="allocation-track"
                                     role="img"
-                                    aria-label={`${item.label}: ${formatCurrency(item.value)}, ${item.percentage.toFixed(0)}% of assets`}
+                                    aria-label={describeItem(item)}
                                 >
                                     <span
                                         className="allocation-fill"
