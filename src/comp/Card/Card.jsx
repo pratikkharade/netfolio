@@ -10,11 +10,15 @@ const toneIcons = {
     loan: CarFront,
 }
 
-function Card({ title, value, tone = "primary", featured = false, isLoading = false, hideValue = false, children }) {
+function Card({ title, value, tone = "primary", featured = false, isLoading = false, hideValue = false, href, children }) {
     const Icon = toneIcons[tone]
+    const Component = href ? "a" : "article"
 
     return (
-        <article className={`card-wrapper card-${tone} ${featured ? "card-featured" : ""}`}>
+        <Component
+            className={`card-wrapper card-${tone} ${featured ? "card-featured" : ""} ${href ? "card-link" : ""}`}
+            {...(href ? { href, "aria-label": `View ${title}` } : {})}
+        >
             <div className="card-topline">
                 <p className="card-label">{title}</p>
                 <span className="card-icon" aria-hidden="true"><Icon size={18} /></span>
@@ -25,7 +29,7 @@ function Card({ title, value, tone = "primary", featured = false, isLoading = fa
                     : Number.isFinite(value) ? (hideValue ? "XXXXX" : formatCurrency(value)) : "Unavailable"}
             </div>
             {children}
-        </article>
+        </Component>
     )
 }
 

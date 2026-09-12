@@ -99,7 +99,7 @@
 
 .loan-balance-row span {
     color: var(--asset);
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 650;
 }
 
@@ -154,6 +154,39 @@
     margin-top: 22px;
     padding-top: 20px;
     border-top: 1px solid var(--border);
+}
+
+.loan-fact {
+    padding: 13px 14px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+}
+
+.loan-fact-completed {
+    border-color: var(--asset-soft);
+    background: var(--asset-soft);
+}
+
+.loan-fact-completed strong {
+    color: var(--asset);
+}
+
+.loan-fact-upcoming {
+    border-color: var(--accent-soft);
+    background: var(--accent-soft);
+}
+
+.loan-fact-upcoming strong {
+    color: var(--accent);
+}
+
+.loan-fact-payoff {
+    border-color: var(--warning-soft);
+    background: var(--warning-soft);
+}
+
+.loan-fact-payoff strong {
+    color: var(--warning);
 }
 
 .loan-facts strong {

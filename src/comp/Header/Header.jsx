@@ -6,13 +6,14 @@ function Header({ isLoading, onRefresh, hideValues, onToggleValues }) {
         <header className="app-bar">
             <div className="app-bar-inner">
                 <div className="app-bar-identity">
-                    <div className="brand" aria-label="NetFolio">
+                    <a className="brand-mark-link" href="#home" aria-label="Go to NetFolio home">
                         <span className="brand-mark" aria-hidden="true">
                             <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" />
                         </span>
-                        <span>NetFolio</span>
-                    </div>
+                    </a>
                 </div>
+
+                <a className="brand-title" href="#home">NetFolio</a>
 
                 <div className="app-bar-actions">
                     <button

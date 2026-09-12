@@ -21,6 +21,7 @@ export default function Overview({ netWorth, totalAssets, totalLiabilities, isLo
                     value={netWorth}
                     tone="primary"
                     featured
+                    href="#accounts"
                     isLoading={isLoading}
                     hideValue={hideValues}
                 >
@@ -42,14 +43,15 @@ export default function Overview({ netWorth, totalAssets, totalLiabilities, isLo
                 </Card>
 
                 <div className="summary-secondary-grid">
-                    <Card title="Total assets" value={totalAssets} tone="asset" isLoading={isLoading} hideValue={hideValues} />
-                    <Card title="Total liabilities" value={totalLiabilities} tone="liability" isLoading={isLoading} hideValue={hideValues} />
+                    <Card title="Total assets" value={totalAssets} tone="asset" href="#accounts" isLoading={isLoading} hideValue={hideValues} />
+                    <Card title="Total liabilities" value={totalLiabilities} tone="liability" href="#accounts" isLoading={isLoading} hideValue={hideValues} />
                 </div>
 
                 <Card
                     title="Auto loan balance"
                     value={loanSummary?.currentBalance}
                     tone="loan"
+                    href="#auto-loan"
                     isLoading={loanStatus === "loading"}
                     hideValue={hideValues}
                 >

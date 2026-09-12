@@ -8,6 +8,24 @@
     background: var(--surface);
 }
 
+.card-link {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.card-link:hover {
+    border-color: var(--border-strong);
+    box-shadow: 0 14px 30px var(--shadow-color);
+    transform: translateY(-2px);
+}
+
+.card-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
 .card-featured {
     min-height: 240px;
     padding: 24px;
@@ -91,5 +109,11 @@
     .card-featured {
         min-height: auto;
         padding: 19px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-link {
+        transition: none;
     }
 }

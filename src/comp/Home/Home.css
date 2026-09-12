@@ -44,10 +44,15 @@
 }
 
 .app-view-home,
-.app-view-loan,
 .app-view-profile {
     display: grid;
     align-content: center;
+}
+
+.app-view-accounts,
+.app-view-loan {
+    display: grid;
+    align-content: start;
 }
 
 .loan-page-heading {
@@ -181,7 +186,6 @@
     }
 
     .app-view-home,
-    .app-view-loan,
     .app-view-profile {
         align-content: start;
     }
@@ -216,6 +220,16 @@
 }
 
 @media (min-width: 781px) {
+    .app-main {
+        scroll-padding-block: 24px;
+        -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
+    }
+
+    .app-main-inner {
+        padding-bottom: 64px;
+    }
+
     .update-toast {
         bottom: 96px;
     }

@@ -17,12 +17,22 @@ function displayDate(value) {
     return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })
 }
 
+function getZeroInterestPaymentSchedule(summary) {
+    if (summary?.apr !== 0 || !(summary.currentBalance > 0) || !(summary.monthlyPayment > 0)) return null
+
+    const paymentsRemaining = Math.ceil(summary.currentBalance / summary.monthlyPayment)
+    const finalPayment = summary.currentBalance - (summary.monthlyPayment * (paymentsRemaining - 1))
+
+    return { paymentsRemaining, finalPayment }
+}
+
 function LoanDetails({ loanData, status, error, hideValues }) {
     const [view, setView] = useState("overview")
     const summary = loanData?.summary
     const payments = loanData?.payments || []
     const paidPercentage = summary?.paidPercentage ?? 0
     const hasPayoffProgress = Number.isFinite(summary?.paidPercentage)
+    const paymentSchedule = getZeroInterestPaymentSchedule(summary)
 
     if (status === "loading") {
         return (
@@ -50,7 +60,7 @@ function LoanDetails({ loanData, status, error, hideValues }) {
                 <div className="loan-title-group">
                     <span className="loan-title-icon" aria-hidden="true"><CarFront size={19} /></span>
                     <div>
-                        <p className="section-eyebrow">AUTO LOAN</p>
+                        <p className="section-eyebrow">PRATIK'S CAR</p>
                         <h2 id="loan-details-title">{summary.loanName}</h2>
                     </div>
                 </div>
@@ -85,7 +95,7 @@ function LoanDetails({ loanData, status, error, hideValues }) {
                         <span>Balance principal</span>
                         <div className="loan-balance-row">
                             <strong>{displayCurrency(summary.currentBalance, hideValues)}</strong>
-                            {summary.principalPaid !== null && <span>{displayCurrency(summary.principalPaid, hideValues)} paid</span>}
+                            {summary.principalPaid !== null && <span>{displayCurrency(summary.principalPaid, hideValues)} paid off</span>}
                         </div>
                         <div
                             className="loan-progress-track"
@@ -105,16 +115,19 @@ function LoanDetails({ loanData, status, error, hideValues }) {
                     </div>
 
                     <div className="loan-next-payment">
-                        <span>Last payment · {displayDate(summary.lastPaymentDate)}</span>
+                        <span>Monthly payment:</span>
                         <strong>{displayCurrency(summary.monthlyPayment, hideValues)}</strong>
-                        <p>Estimated payoff: {displayDate(summary.estimatedPayoff)}</p>
+                        <span>{paymentSchedule ? `${hideValues ? "XXXXX" : paymentSchedule.paymentsRemaining} scheduled payments remaining` : "Scheduled monthly payment"}</span>
+                        {/* <p>{paymentSchedule ? `Estimated final payment: ${displayCurrency(paymentSchedule.finalPayment, hideValues)}` : "Based on the current loan balance"}</p> */}
                     </div>
                 </div>
 
                 <div className="loan-facts">
-                    <div><span>Interest rate</span><strong>{summary.apr !== null ? (hideValues ? "XXXXX" : `${summary.apr.toFixed(2)}% APR`) : "—"}</strong></div>
-                    <div><span>Paid Off</span><strong>{displayCurrency(summary.principalPaid, hideValues)}</strong></div>
-                    <div><span>Next payment</span><strong>{displayDate(summary.nextDueDate)}</strong></div>
+                    <div className="loan-fact loan-fact-completed"><span>Last payment</span><strong>{displayDate(summary.lastPaymentDate)}</strong></div>
+                    <div className="loan-fact loan-fact-upcoming"><span>Next payment</span><strong>{displayDate(summary.nextDueDate)}</strong></div>
+                    <div className="loan-fact loan-fact-payoff"><span>Estimated payoff</span><strong>{displayDate(summary.estimatedPayoff)}</strong></div>
+                    {/* <div><span>Paid Off</span><strong>{displayCurrency(summary.principalPaid, hideValues)}</strong></div>
+                    <div><span>Next payment</span><strong>{displayDate(summary.nextDueDate)}</strong></div> */}
                 </div>
             </div>
 

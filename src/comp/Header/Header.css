@@ -8,17 +8,17 @@
 }
 
 .app-bar-inner {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     width: min(1080px, calc(100% - 48px));
     min-height: 68px;
     align-items: center;
-    justify-content: space-between;
     gap: 18px;
     margin: 0 auto;
 }
 
 .app-bar-identity,
-.brand,
+.brand-mark-link,
 .app-bar-actions,
 .header-icon-button {
     display: flex;
@@ -27,14 +27,27 @@
 
 .app-bar-identity {
     min-width: 0;
+    justify-self: start;
 }
 
-.brand {
-    gap: 10px;
+.brand-mark-link {
+    border-radius: 11px;
+}
+
+.brand-title {
+    justify-self: center;
     color: var(--text-primary);
-    font-size: 1.3rem;
+    font-size: 2rem;
     font-weight: 750;
     letter-spacing: -0.025em;
+    text-decoration: none;
+}
+
+.brand-mark-link:focus-visible,
+.brand-title:focus-visible {
+    border-radius: 12px;
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
 }
 
 .brand-mark {
@@ -55,6 +68,7 @@
 .app-bar-actions {
     flex: 0 0 auto;
     gap: 8px;
+    justify-self: end;
 }
 
 .header-icon-button {
@@ -111,9 +125,8 @@
         min-height: 64px;
     }
 
-    .brand {
-        gap: 9px;
-        font-size: 1.18rem;
+    .brand-title {
+        font-size: 1.5rem;
     }
 
     .brand-mark {
@@ -128,8 +141,8 @@
 }
 
 @media (max-width: 350px) {
-    .brand {
-        font-size: 1.05rem;
+    .brand-title {
+        font-size: 1.35rem;
     }
 
     .brand-mark {
