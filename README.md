@@ -18,6 +18,40 @@ npm run plaid:fetch
 U.S. Bank and Chase call `/accounts/balance/get`. Robinhood calls both
 `/accounts/balance/get` and `/investments/holdings/get`.
 
+## Auto loan spreadsheet
+
+NetFolio reads auto-loan data from spreadsheet
+`1l6qj5TbRJcQxL056W474bOYdgH_NDlgQ7xeW_-pT-zg`. The spreadsheet must grant
+**Viewer** access to **Anyone with the link** so the static GitHub Pages app can
+read it. The app reads the two existing tabs by their stable Google Sheet grid IDs,
+so renaming `Sheet1` and `Sheet2` will not break the integration. Renaming them to
+`Loan Summary` and `Payment History` is still recommended for clarity.
+
+### Loan Summary
+
+Use `Field` and `Value` as the first row, followed by these fields:
+
+- `Loan Name`
+- `Original Balance`
+- `Current Balance`
+- `APR`
+- `Monthly Payment`
+- `Start Date`
+- `Next Due Date`
+- `Estimated Payoff`
+- `Last Updated`
+
+### Payment History
+
+Use these column headers:
+
+```text
+Payment Date | Starting Balance | Payment | Ending Balance
+```
+
+The app reads both tabs on load and when Refresh is selected. The auto loan is
+shown separately and is not included in total liabilities or net worth.
+
 ## Scheduled spreadsheet refresh
 
 The `Refresh portfolio` GitHub Actions workflow runs at midnight, 6:00 AM,

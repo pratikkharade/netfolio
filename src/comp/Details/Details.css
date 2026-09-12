@@ -1,3 +1,50 @@
+.detail-mode-switch {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(390px, 100%);
+    gap: 4px;
+    margin-bottom: 16px;
+    padding: 4px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--background-deep);
+}
+
+.detail-mode-switch button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    gap: 8px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 9px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 650;
+    background: transparent;
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.detail-mode-switch button:hover {
+    color: var(--text-secondary);
+}
+
+.detail-mode-switch button[aria-selected="true"] {
+    color: var(--accent);
+    background: var(--surface-hover);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+}
+
+.detail-mode-switch button:last-child[aria-selected="true"] {
+    color: #fbbf24;
+}
+
+[role="tabpanel"][hidden] {
+    display: none;
+}
+
 .dashboard-grid {
     display: grid;
     grid-template-columns: minmax(280px, 0.74fr) minmax(0, 1.26fr);
@@ -40,6 +87,10 @@
 }
 
 @media (max-width: 780px) {
+    .detail-mode-switch {
+        width: 100%;
+    }
+
     .dashboard-grid {
         grid-template-columns: 1fr;
     }

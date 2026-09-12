@@ -9,11 +9,12 @@ import "./Header.css"
 
 const COMPACT_HEADER_AFTER = 96
 
-function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasError, onRefresh, setIsAuthenticated }) {
+function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasError, onRefresh, setIsAuthenticated, loanSummary, loanStatus }) {
     const [isScrolled, setIsScrolled] = useState(() => window.scrollY > COMPACT_HEADER_AFTER)
     const grossPosition = totalAssets + totalLiabilities
     const assetShare = grossPosition > 0 ? (totalAssets / grossPosition) * 100 : 100
     const liabilityShare = grossPosition > 0 ? (totalLiabilities / grossPosition) * 100 : 0
+    const hasLoanProgress = Number.isFinite(loanSummary?.paidPercentage)
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > COMPACT_HEADER_AFTER)
@@ -61,7 +62,7 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                 <div className="section-heading summary-heading">
                     <div>
                         <p className="section-eyebrow">OVERVIEW</p>
-                        <h1 id="overview-title">Your financial snapshot</h1>
+                        <h1 id="overview-title">Pratik's Finances</h1>
                     </div>
                 </div>
 
@@ -89,6 +90,24 @@ function Header({ date, netWorth, totalAssets, totalLiabilities, isLoading, hasE
                         <Card title="Total assets" value={totalAssets} tone="asset" isLoading={isLoading} />
                         <Card title="Total liabilities" value={totalLiabilities} tone="liability" isLoading={isLoading} />
                     </div>
+
+                    <Card
+                        title="Auto loan balance"
+                        value={loanSummary?.currentBalance}
+                        tone="loan"
+                        isLoading={loanStatus === "loading"}
+                    >
+                        {loanStatus === "success" && hasLoanProgress && (
+                            <div className="loan-summary-completion">
+                                <div className="loan-summary-track" aria-hidden="true">
+                                    <span style={{ width: `${loanSummary?.paidPercentage ?? 0}%` }} />
+                                </div>
+                                <span>{(loanSummary?.paidPercentage ?? 0).toFixed(1)}% paid off</span>
+                            </div>
+                        )}
+                        {loanStatus === "success" && !hasLoanProgress && <p className="loan-summary-error">Tracked separately</p>}
+                        {loanStatus === "error" && <p className="loan-summary-error">Spreadsheet unavailable</p>}
+                    </Card>
                 </div>
             </section>}
         </>

@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react"
 import { AlertCircle, RefreshCw } from "lucide-react"
-import { data_url } from "../../config.jsx"
+import { data_url, loan_history_url, loan_summary_url } from "../../config.jsx"
 import { getTotalByType } from "../helpers.jsx"
 import Details from "../Details/Details.jsx"
 import Header from "../Header/Header.jsx"
 import ScrollToTop from "../ScrollToTop/ScrollToTop.jsx"
+import { parseLoanData } from "../Loan/loanData.js"
+import { parseCSV } from "../../utils/csv.js"
 import "./Home.css"
 
 const EMPTY_CATEGORIES = {
@@ -23,9 +25,7 @@ function createEmptyCategories() {
 }
 
 function parsePortfolioCSV(rawData) {
-    const rows = rawData
-        .split(/\r?\n/)
-        .map((row) => row.split(","))
+    const rows = parseCSV(rawData)
 
     const updatedAt = rows[0]?.[1]?.trim() || null
     const accounts = rows
@@ -42,25 +42,31 @@ function parsePortfolioCSV(rawData) {
     return { accounts, updatedAt }
 }
 
+async function fetchCSV(url, signal) {
+    const separator = url.includes("?") ? "&" : "?"
+    const response = await fetch(`${url}${separator}t=${Date.now()}`, {
+        signal,
+        cache: "no-store",
+    })
+    if (!response.ok) throw new Error(`Request failed with status ${response.status}`)
+    return response.text()
+}
+
 export default function FinanceApp({ setIsAuthenticated }) {
     const [data, setData] = useState([])
     const [date, setDate] = useState(null)
     const [status, setStatus] = useState("loading")
     const [error, setError] = useState("")
     const [requestKey, setRequestKey] = useState(0)
+    const [loanData, setLoanData] = useState(null)
+    const [loanStatus, setLoanStatus] = useState("loading")
+    const [loanError, setLoanError] = useState("")
 
     useEffect(() => {
         const controller = new AbortController()
         let isCancelled = false
 
-        fetch(`${data_url}&t=${Date.now()}`, {
-            signal: controller.signal,
-            cache: "no-store",
-        })
-            .then((response) => {
-                if (!response.ok) throw new Error(`Request failed with status ${response.status}`)
-                return response.text()
-            })
+        fetchCSV(data_url, controller.signal)
             .then(parsePortfolioCSV)
             .then((spreadsheetPortfolio) => {
                 if (isCancelled) return
@@ -74,6 +80,31 @@ export default function FinanceApp({ setIsAuthenticated }) {
                 if (fetchError.name === "AbortError") return
                 setStatus("error")
                 setError("We couldn’t load your latest account data.")
+            })
+
+        Promise.all([
+            fetchCSV(loan_summary_url, controller.signal),
+            fetchCSV(loan_history_url, controller.signal),
+        ])
+            .then(([summaryCSV, historyCSV]) => {
+                const nextLoanData = parseLoanData(summaryCSV, historyCSV)
+                if (nextLoanData.summary.currentBalance === null && nextLoanData.payments.length === 0) {
+                    throw new Error("The loan spreadsheet does not contain recognizable data.")
+                }
+                return nextLoanData
+            })
+            .then((nextLoanData) => {
+                if (isCancelled) return
+
+                setLoanData(nextLoanData)
+                setLoanStatus("success")
+                setLoanError("")
+            })
+            .catch((fetchError) => {
+                if (fetchError.name === "AbortError") return
+                setLoanData(null)
+                setLoanStatus("error")
+                setLoanError("Make both loan tabs available to anyone with the link, then refresh.")
             })
 
         return () => {
@@ -95,6 +126,8 @@ export default function FinanceApp({ setIsAuthenticated }) {
     const handleRefresh = () => {
         setStatus("loading")
         setError("")
+        setLoanStatus("loading")
+        setLoanError("")
         setRequestKey((key) => key + 1)
     }
 
@@ -110,6 +143,8 @@ export default function FinanceApp({ setIsAuthenticated }) {
                     hasError={status === "error"}
                     onRefresh={handleRefresh}
                     setIsAuthenticated={setIsAuthenticated}
+                    loanSummary={loanData?.summary}
+                    loanStatus={loanStatus}
                 />
 
                 {status === "error" ? (
@@ -131,6 +166,9 @@ export default function FinanceApp({ setIsAuthenticated }) {
                         categories={categories}
                         totalAssets={totalAssets}
                         isLoading={isLoading}
+                        loanData={loanData}
+                        loanStatus={loanStatus}
+                        loanError={loanError}
                     />
                 )}
             </main>

@@ -184,7 +184,7 @@
 
 .summary-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.8fr);
+    grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr) minmax(180px, 1fr);
     gap: 16px;
 }
 
@@ -252,6 +252,38 @@
     background: var(--liability);
 }
 
+.loan-summary-completion {
+    padding-top: 18px;
+    margin-top: auto;
+}
+
+.loan-summary-track {
+    height: 7px;
+    overflow: hidden;
+    margin-bottom: 9px;
+    border-radius: 999px;
+    background: var(--surface-strong);
+}
+
+.loan-summary-track span {
+    display: block;
+    max-width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: #fbbf24;
+    transition: width 450ms ease;
+}
+
+.loan-summary-completion > span,
+.loan-summary-error {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+}
+
+.loan-summary-error {
+    margin: auto 0 0;
+}
+
 @media (max-width: 780px) {
     .app-bar {
         min-height: 66px;
@@ -271,12 +303,16 @@
     }
 
     .summary-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .summary-grid > .card-featured {
+        grid-column: 1 / -1;
     }
 
     .summary-secondary-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -338,6 +374,14 @@
 
     .summary-secondary-grid {
         grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid > .card-featured {
+        grid-column: auto;
     }
 }
 
