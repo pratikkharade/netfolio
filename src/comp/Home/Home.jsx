@@ -4,6 +4,7 @@ import { data_url, loan_history_url, loan_summary_url } from "../../config.jsx"
 import { getTotalByType } from "../helpers.jsx"
 import Details from "../Details/Details.jsx"
 import Header from "../Header/Header.jsx"
+import PrivacyUnlock from "../PrivacyUnlock/PrivacyUnlock.jsx"
 import ScrollToTop from "../ScrollToTop/ScrollToTop.jsx"
 import { parseLoanData } from "../Loan/loanData.js"
 import { parseCSV } from "../../utils/csv.js"
@@ -17,6 +18,8 @@ const EMPTY_CATEGORIES = {
     rent: [],
     cc: [],
 }
+
+const VALUES_HIDDEN_KEY = "netfolio-values-hidden"
 
 function createEmptyCategories() {
     return Object.fromEntries(
@@ -61,7 +64,10 @@ export default function FinanceApp({ setIsAuthenticated }) {
     const [loanData, setLoanData] = useState(null)
     const [loanStatus, setLoanStatus] = useState("loading")
     const [loanError, setLoanError] = useState("")
-    const [hideValues, setHideValues] = useState(true)
+    const [hideValues, setHideValues] = useState(
+        () => localStorage.getItem(VALUES_HIDDEN_KEY) === "true"
+    )
+    const [isUnlockOpen, setIsUnlockOpen] = useState(false)
 
     useEffect(() => {
         const controller = new AbortController()
@@ -132,6 +138,16 @@ export default function FinanceApp({ setIsAuthenticated }) {
         setRequestKey((key) => key + 1)
     }
 
+    const handleToggleValues = () => {
+        if (hideValues) {
+            setIsUnlockOpen(true)
+            return
+        }
+
+        localStorage.setItem(VALUES_HIDDEN_KEY, "true")
+        setHideValues(true)
+    }
+
     return (
         <div className="home-container">
             <main id="top" className="home-content">
@@ -147,7 +163,7 @@ export default function FinanceApp({ setIsAuthenticated }) {
                     loanSummary={loanData?.summary}
                     loanStatus={loanStatus}
                     hideValues={hideValues}
-                    onToggleValues={() => setHideValues((hidden) => !hidden)}
+                    onToggleValues={handleToggleValues}
                 />
 
                 {status === "error" ? (
@@ -177,6 +193,16 @@ export default function FinanceApp({ setIsAuthenticated }) {
                 )}
             </main>
             <ScrollToTop />
+            {isUnlockOpen && (
+                <PrivacyUnlock
+                    onCancel={() => setIsUnlockOpen(false)}
+                    onUnlock={() => {
+                        localStorage.removeItem(VALUES_HIDDEN_KEY)
+                        setHideValues(false)
+                        setIsUnlockOpen(false)
+                    }}
+                />
+            )}
         </div>
     )
 }
