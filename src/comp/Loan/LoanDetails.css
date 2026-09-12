@@ -196,6 +196,10 @@
     border-bottom: 0;
 }
 
+.loan-history-cards {
+    display: none;
+}
+
 .loan-history-empty {
     margin-bottom: 0;
     padding: 24px 0;
@@ -260,5 +264,69 @@
         align-items: flex-start;
         flex-direction: column;
         gap: 5px;
+    }
+
+    .loan-history-table-wrapper {
+        display: none;
+    }
+
+    .loan-history-cards {
+        display: grid;
+        gap: 10px;
+    }
+
+    .loan-payment-card {
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: rgba(23, 32, 51, 0.48);
+    }
+
+    .loan-payment-date {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .loan-payment-date span,
+    .loan-payment-values span {
+        color: var(--text-muted);
+        font-size: 0.64rem;
+    }
+
+    .loan-payment-date strong {
+        font-size: 0.76rem;
+    }
+
+    .loan-payment-values {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .loan-payment-values > div {
+        display: grid;
+        min-width: 0;
+        gap: 5px;
+    }
+
+    .loan-payment-values strong {
+        font-size: 0.72rem;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .loan-payment-values > div:nth-child(2) strong {
+        color: var(--asset);
+    }
+
+    .loan-payment-values > div:last-child {
+        grid-column: 1 / -1;
+        padding-top: 10px;
+        border-top: 1px solid var(--border);
     }
 }

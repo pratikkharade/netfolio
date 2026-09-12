@@ -120,28 +120,55 @@ function LoanDetails({ loanData, status, error, hideValues }) {
 
             <div id="loan-history-panel" role="tabpanel" aria-labelledby="loan-history-tab" hidden={view !== "history"}>
                 {payments.length ? (
-                    <div className="loan-history-table-wrapper">
-                        <table className="loan-history-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Starting balance</th>
-                                    <th>Payment</th>
-                                    <th>Ending balance</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {payments.map((payment, index) => (
-                                    <tr key={`${payment.paymentDate}-${index}`}>
-                                        <td>{displayDate(payment.paymentDate)}</td>
-                                        <td>{displayCurrency(payment.startingBalance, hideValues)}</td>
-                                        <td>{displayCurrency(payment.payment, hideValues)}</td>
-                                        <td>{displayCurrency(payment.endingBalance, hideValues)}</td>
+                    <>
+                        <div className="loan-history-table-wrapper">
+                            <table className="loan-history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Starting balance</th>
+                                        <th>Payment</th>
+                                        <th>Ending balance</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {payments.map((payment, index) => (
+                                        <tr key={`${payment.paymentDate}-${index}`}>
+                                            <td>{displayDate(payment.paymentDate)}</td>
+                                            <td>{displayCurrency(payment.startingBalance, hideValues)}</td>
+                                            <td>{displayCurrency(payment.payment, hideValues)}</td>
+                                            <td>{displayCurrency(payment.endingBalance, hideValues)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="loan-history-cards" role="list" aria-label="Payment history">
+                            {payments.map((payment, index) => (
+                                <article className="loan-payment-card" role="listitem" key={`${payment.paymentDate}-${index}`}>
+                                    <div className="loan-payment-date">
+                                        <span>Payment date</span>
+                                        <strong>{displayDate(payment.paymentDate)}</strong>
+                                    </div>
+                                    <div className="loan-payment-values">
+                                        <div>
+                                            <span>Starting balance</span>
+                                            <strong>{displayCurrency(payment.startingBalance, hideValues)}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Payment</span>
+                                            <strong>{displayCurrency(payment.payment, hideValues)}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Ending balance</span>
+                                            <strong>{displayCurrency(payment.endingBalance, hideValues)}</strong>
+                                        </div>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    </>
                 ) : <p className="loan-history-empty">No payment history has been added yet.</p>}
             </div>
         </section>

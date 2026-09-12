@@ -1,7 +1,11 @@
 .home-container {
     position: relative;
-    min-height: 100svh;
-    overflow-x: clip;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
     background:
         radial-gradient(circle at 4% 0%, rgba(59, 130, 246, 0.09), transparent 30rem),
         radial-gradient(circle at 96% 24%, rgba(52, 211, 153, 0.05), transparent 26rem),
@@ -9,7 +13,7 @@
 }
 
 .home-container::before {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 0;
     pointer-events: none;
@@ -20,12 +24,38 @@
     mask-image: linear-gradient(to bottom, black, transparent 65%);
 }
 
-.home-content {
+.app-main {
     position: relative;
     z-index: 1;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    -webkit-overflow-scrolling: touch;
+}
+
+.app-main-inner {
     width: min(1080px, calc(100% - 48px));
+    min-height: 100%;
     margin: 0 auto;
-    padding-bottom: 56px;
+    padding: 30px 0 34px;
+    animation: app-view-in 180ms ease both;
+}
+
+.app-view-home,
+.app-view-loan,
+.app-view-profile {
+    display: grid;
+    align-content: center;
+}
+
+.loan-page-heading {
+    margin-bottom: 22px;
+}
+
+.loan-page-heading .section-eyebrow {
+    margin-bottom: 6px;
 }
 
 .dashboard-error {
@@ -33,7 +63,6 @@
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 16px;
-    margin-top: 24px;
     padding: 20px;
     border: 1px solid rgba(251, 113, 133, 0.32);
     border-radius: var(--radius-lg);
@@ -42,10 +71,10 @@
 
 .dashboard-error-icon {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
     width: 42px;
     height: 42px;
+    align-items: center;
+    justify-content: center;
     border-radius: 12px;
     color: var(--liability);
     background: rgba(251, 113, 133, 0.12);
@@ -63,10 +92,10 @@
 
 .dashboard-error button {
     display: inline-flex;
+    min-height: 40px;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 40px;
     padding: 0 15px;
     border: 1px solid var(--border-strong);
     border-radius: 10px;
@@ -79,16 +108,93 @@
     background: var(--surface-hover);
 }
 
+.update-toast {
+    position: fixed;
+    bottom: calc(78px + env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 80;
+    display: flex;
+    width: max-content;
+    max-width: calc(100% - 24px);
+    min-height: 42px;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 13px;
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    border-radius: 12px;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    background: rgba(23, 32, 51, 0.82);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(16px);
+    pointer-events: none;
+    animation: update-toast-lifecycle 3s ease both;
+}
+
+.update-toast svg {
+    flex: 0 0 auto;
+    color: var(--accent);
+}
+
+.update-toast strong {
+    overflow: hidden;
+    color: var(--text-primary);
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@keyframes app-view-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes update-toast-lifecycle {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 8px) scale(0.98);
+    }
+
+    8%,
+    84% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, 4px) scale(0.99);
+    }
+}
+
 @media (max-width: 780px) {
-    .home-content {
+    .app-main-inner {
         width: min(100% - 32px, 620px);
-        padding-bottom: 32px;
+        padding: 24px 0 28px;
+    }
+
+    .app-view-home,
+    .app-view-loan,
+    .app-view-profile {
+        align-content: start;
     }
 }
 
 @media (max-width: 560px) {
-    .home-content {
-        width: min(100% - 24px, 620px);
+    .app-main {
+        scrollbar-gutter: auto;
+    }
+
+    .app-main-inner {
+        width: calc(100% - 24px);
+        padding: 20px 0 24px;
     }
 
     .dashboard-error {
@@ -99,5 +205,18 @@
     .dashboard-error button {
         grid-column: 1 / -1;
         width: 100%;
+    }
+}
+
+@media (max-height: 720px) and (min-width: 781px) {
+    .app-main-inner {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+@media (min-width: 781px) {
+    .update-toast {
+        bottom: 96px;
     }
 }
