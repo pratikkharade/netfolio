@@ -5,7 +5,7 @@
     min-width: 0;
     gap: 20px;
     padding: 11px 0;
-    border-bottom: 1px solid rgba(52, 68, 95, 0.58);
+    border-bottom: 1px solid var(--border);
 }
 
 .account-container:last-of-type {

@@ -10,7 +10,7 @@
     position: absolute;
     inset: 0;
     content: "";
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+    background: linear-gradient(90deg, transparent, var(--shimmer), transparent);
     transform: translateX(-100%);
     animation: loading-shimmer 1.35s infinite;
 }

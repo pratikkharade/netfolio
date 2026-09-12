@@ -21,6 +21,28 @@
   --liability: #fb7185;
   --liability-soft: rgba(251, 113, 133, 0.11);
   --danger: #fda4af;
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.1);
+  --on-accent: #06101f;
+  --accent-hover: #93c5fd;
+  --input-placeholder: #64748b;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --chrome-bg: rgba(11, 17, 32, 0.94);
+  --chrome-surface: rgba(17, 24, 39, 0.96);
+  --translucent-surface: rgba(23, 32, 51, 0.82);
+  --subtle-surface: rgba(23, 32, 51, 0.46);
+  --surface-hover-tint: rgba(255, 255, 255, 0.025);
+  --page-grid-line: rgba(255, 255, 255, 0.012);
+  --page-glow-primary: rgba(59, 130, 246, 0.09);
+  --page-glow-secondary: rgba(52, 211, 153, 0.05);
+  --modal-backdrop: rgba(3, 7, 18, 0.74);
+  --modal-surface: rgba(17, 24, 39, 0.98);
+  --login-overlay-start: rgba(7, 12, 22, 0.76);
+  --login-overlay-end: rgba(7, 12, 22, 0.92);
+  --login-glow: #18243a;
+  --chart-edge: rgba(3, 7, 18, 0.5);
+  --chart-active-stroke: rgba(248, 250, 252, 0.78);
+  --shimmer: rgba(255, 255, 255, 0.07);
   --radius-lg: 16px;
   --radius-md: 12px;
   --focus-ring: 0 0 0 3px rgba(96, 165, 250, 0.28);
@@ -32,6 +54,51 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme="light"] {
+  --background: #f4f7fb;
+  --background-deep: #e9eff7;
+  --surface: #ffffff;
+  --surface-strong: #eef3f9;
+  --surface-hover: #e6edf6;
+  --border: #d5deea;
+  --border-strong: #b9c7d8;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.1);
+  --asset: #047857;
+  --asset-soft: rgba(5, 150, 105, 0.1);
+  --liability: #be123c;
+  --liability-soft: rgba(225, 29, 72, 0.09);
+  --danger: #be123c;
+  --warning: #b45309;
+  --warning-soft: rgba(217, 119, 6, 0.1);
+  --on-accent: #ffffff;
+  --accent-hover: #1d4ed8;
+  --input-placeholder: #94a3b8;
+  --shadow-color: rgba(15, 23, 42, 0.14);
+  --chrome-bg: rgba(248, 250, 252, 0.94);
+  --chrome-surface: rgba(255, 255, 255, 0.96);
+  --translucent-surface: rgba(255, 255, 255, 0.88);
+  --subtle-surface: rgba(241, 245, 249, 0.82);
+  --surface-hover-tint: rgba(15, 23, 42, 0.035);
+  --page-grid-line: rgba(15, 23, 42, 0.028);
+  --page-glow-primary: rgba(37, 99, 235, 0.08);
+  --page-glow-secondary: rgba(5, 150, 105, 0.05);
+  --modal-backdrop: rgba(15, 23, 42, 0.38);
+  --modal-surface: rgba(255, 255, 255, 0.98);
+  --login-overlay-start: rgba(244, 247, 251, 0.62);
+  --login-overlay-end: rgba(244, 247, 251, 0.9);
+  --login-glow: #dbeafe;
+  --chart-edge: rgba(71, 85, 105, 0.38);
+  --chart-active-stroke: rgba(15, 23, 42, 0.58);
+  --shimmer: rgba(15, 23, 42, 0.08);
+  --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.22);
+  color-scheme: light;
 }
 
 *,
@@ -51,6 +118,7 @@ body {
   min-height: 100%;
   margin: 0;
   background: var(--background);
+  transition: color 180ms ease, background-color 180ms ease;
 }
 
 button,

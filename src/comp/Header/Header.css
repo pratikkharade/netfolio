@@ -2,8 +2,8 @@
     position: relative;
     z-index: 50;
     border-bottom: 1px solid var(--border);
-    background: rgba(11, 17, 32, 0.92);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+    background: var(--chrome-bg);
+    box-shadow: 0 8px 28px var(--shadow-color);
     backdrop-filter: blur(18px);
 }
 

@@ -97,17 +97,17 @@
 }
 
 .allocation-pie-depth {
-    filter: brightness(0.42) saturate(0.85) drop-shadow(0 18px 18px rgba(0, 0, 0, 0.36));
+    filter: brightness(0.42) saturate(0.85) drop-shadow(0 18px 18px var(--shadow-color));
     transform: translate3d(0, 17px, -18px);
 }
 
 .allocation-pie-depth path {
-    stroke: rgba(3, 7, 18, 0.5);
+    stroke: var(--chart-edge);
     stroke-width: 2;
 }
 
 .allocation-pie-face {
-    filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 10px 10px var(--shadow-color));
     transform: translateZ(12px);
 }
 
@@ -123,8 +123,8 @@
 .allocation-pie-slice:hover,
 .allocation-pie-slice:focus,
 .allocation-pie-slice.is-active {
-    stroke: rgba(248, 250, 252, 0.78);
-    filter: brightness(1.16) drop-shadow(0 8px 7px rgba(0, 0, 0, 0.3));
+    stroke: var(--chart-active-stroke);
+    filter: brightness(1.16) drop-shadow(0 8px 7px var(--shadow-color));
     outline: none;
 }
 

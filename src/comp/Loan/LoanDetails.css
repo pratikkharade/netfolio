@@ -44,8 +44,8 @@
     align-items: center;
     justify-content: center;
     border-radius: 11px;
-    color: #fbbf24;
-    background: rgba(251, 191, 36, 0.1);
+    color: var(--warning);
+    background: var(--warning-soft);
 }
 
 .loan-view-tabs {
@@ -129,7 +129,7 @@
 
 .loan-next-payment {
     padding: 17px;
-    border-left: 3px solid #fbbf24;
+    border-left: 3px solid var(--warning);
     border-radius: 0 10px 10px 0;
     background: var(--surface-strong);
 }
@@ -279,7 +279,7 @@
         overflow: hidden;
         border: 1px solid var(--border);
         border-radius: var(--radius-md);
-        background: rgba(23, 32, 51, 0.48);
+        background: var(--subtle-surface);
     }
 
     .loan-payment-date {

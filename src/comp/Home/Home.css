@@ -7,8 +7,8 @@
     height: 100dvh;
     overflow: hidden;
     background:
-        radial-gradient(circle at 4% 0%, rgba(59, 130, 246, 0.09), transparent 30rem),
-        radial-gradient(circle at 96% 24%, rgba(52, 211, 153, 0.05), transparent 26rem),
+        radial-gradient(circle at 4% 0%, var(--page-glow-primary), transparent 30rem),
+        radial-gradient(circle at 96% 24%, var(--page-glow-secondary), transparent 26rem),
         var(--background);
 }
 
@@ -18,8 +18,8 @@
     z-index: 0;
     pointer-events: none;
     content: "";
-    background-image: linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+    background-image: linear-gradient(var(--page-grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--page-grid-line) 1px, transparent 1px);
     background-size: 42px 42px;
     mask-image: linear-gradient(to bottom, black, transparent 65%);
 }
@@ -124,8 +124,8 @@
     border-radius: 12px;
     color: var(--text-muted);
     font-size: 0.72rem;
-    background: rgba(23, 32, 51, 0.82);
-    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
+    background: var(--translucent-surface);
+    box-shadow: 0 14px 36px var(--shadow-color);
     backdrop-filter: blur(16px);
     pointer-events: none;
     animation: update-toast-lifecycle 3s ease both;

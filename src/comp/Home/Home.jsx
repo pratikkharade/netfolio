@@ -68,7 +68,7 @@ async function fetchCSV(url, signal) {
     return response.text()
 }
 
-export default function FinanceApp({ setIsAuthenticated }) {
+export default function FinanceApp({ setIsAuthenticated, theme, onThemeChange }) {
     const contentRef = useRef(null)
     const toastTimeoutRef = useRef(null)
     const [data, setData] = useState([])
@@ -259,6 +259,8 @@ export default function FinanceApp({ setIsAuthenticated }) {
                             isLoading={isLoading}
                             hasError={status === "error"}
                             setIsAuthenticated={setIsAuthenticated}
+                            theme={theme}
+                            onThemeChange={onThemeChange}
                         />
                     )}
                 </div>

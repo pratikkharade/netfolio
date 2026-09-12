@@ -2,7 +2,7 @@
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    background: rgba(23, 32, 51, 0.46);
+    background: var(--subtle-surface);
     transition: border-color 180ms ease, background-color 180ms ease;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .carousel-header:hover {
-    background: rgba(255, 255, 255, 0.025);
+    background: var(--surface-hover-tint);
 }
 
 .carousel-title {

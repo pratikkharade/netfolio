@@ -32,14 +32,6 @@
     text-align: left;
 }
 
-.profile-theme-row {
-    font: inherit;
-}
-
-.profile-theme-row:disabled {
-    cursor: not-allowed;
-}
-
 .profile-setting-icon {
     display: inline-flex;
     width: 38px;
@@ -69,14 +61,41 @@
     font-size: 0.73rem;
 }
 
-.profile-coming-soon {
+.theme-options {
+    display: flex;
     flex: 0 0 auto;
-    padding: 5px 8px;
-    border-radius: 999px;
+    gap: 3px;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--background-deep);
+}
+
+.theme-options button {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 7px;
     color: var(--text-muted);
-    font-size: 0.65rem;
+    font-size: 0.69rem;
     font-weight: 650;
-    background: var(--surface-strong);
+    background: transparent;
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.theme-options button:hover {
+    color: var(--text-secondary);
+}
+
+.theme-options button.is-active {
+    color: var(--accent);
+    background: var(--surface-hover);
+    box-shadow: 0 1px 4px var(--shadow-color);
 }
 
 .profile-logout {
@@ -121,6 +140,20 @@
 
     .profile-setting-row .last-updated svg {
         display: none;
+    }
+
+    .profile-theme-row {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .profile-theme-row .theme-options {
+        width: calc(100% - 49px);
+        margin-left: 49px;
+    }
+
+    .theme-options button {
+        flex: 1;
     }
 
     .profile-logout {

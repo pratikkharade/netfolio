@@ -11,8 +11,8 @@
     border: 1px solid rgba(96, 165, 250, 0.32);
     border-radius: 13px;
     color: var(--accent);
-    background: rgba(17, 24, 39, 0.92);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+    background: var(--chrome-surface);
+    box-shadow: 0 14px 34px var(--shadow-color);
     backdrop-filter: blur(12px);
     cursor: pointer;
     opacity: 0;

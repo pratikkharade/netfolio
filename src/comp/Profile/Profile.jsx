@@ -1,9 +1,9 @@
-import { Database, MoonStar } from "lucide-react"
+import { Database, Moon, Palette, Sun } from "lucide-react"
 import Date from "../Date/Date.jsx"
 import Logout from "../Logout/Logout.jsx"
 import "./Profile.css"
 
-export default function Profile({ date, isLoading, hasError, setIsAuthenticated }) {
+export default function Profile({ date, isLoading, hasError, setIsAuthenticated, theme, onThemeChange }) {
     return (
         <section className="profile-view" aria-labelledby="profile-title">
             <div className="profile-heading">
@@ -23,14 +23,33 @@ export default function Profile({ date, isLoading, hasError, setIsAuthenticated 
                     <Date date={date} isLoading={isLoading} hasError={hasError} />
                 </div>
 
-                <button type="button" className="profile-setting-row profile-theme-row" disabled>
-                    <span className="profile-setting-icon" aria-hidden="true"><MoonStar size={19} /></span>
-                    <span className="profile-setting-copy">
+                <div className="profile-setting-row profile-theme-row">
+                    <span className="profile-setting-icon" aria-hidden="true"><Palette size={19} /></span>
+                    <div className="profile-setting-copy">
                         <strong>Theme</strong>
                         <span>Choose your preferred appearance</span>
-                    </span>
-                    <span className="profile-coming-soon">Coming soon</span>
-                </button>
+                    </div>
+                    <div className="theme-options" role="group" aria-label="Color theme">
+                        <button
+                            type="button"
+                            className={theme === "dark" ? "is-active" : ""}
+                            aria-pressed={theme === "dark"}
+                            onClick={() => onThemeChange("dark")}
+                        >
+                            <Moon size={15} aria-hidden="true" />
+                            Dark
+                        </button>
+                        <button
+                            type="button"
+                            className={theme === "light" ? "is-active" : ""}
+                            aria-pressed={theme === "light"}
+                            onClick={() => onThemeChange("light")}
+                        >
+                            <Sun size={15} aria-hidden="true" />
+                            Light
+                        </button>
+                    </div>
+                </div>
 
                 <div className="profile-logout">
                     <Logout setIsAuthenticated={setIsAuthenticated} />
