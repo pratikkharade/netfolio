@@ -6,6 +6,7 @@ import { mergePortfolioAccounts } from "../src/comp/Home/portfolio.js"
 
 const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets"
 const DISPLAY_TIME_ZONE = "America/Denver"
+const PORTFOLIO_SHEET_TITLE = "Accounts"
 const environment = { ...loadEnv("development", process.cwd(), ""), ...process.env }
 
 function requiredEnvironmentVariable(name) {
@@ -83,20 +84,6 @@ function buildUpdatedRows(existingRows, modeledPortfolio) {
     return [updateRow, headerRow, ...accountRows]
 }
 
-async function getFirstVisibleSheet(sheets, spreadsheetId) {
-    const response = await sheets.spreadsheets.get({
-        spreadsheetId,
-        fields: "sheets(properties(title,index,hidden))",
-    })
-    const sheet = response.data.sheets
-        ?.map(({ properties }) => properties)
-        .filter((properties) => properties && !properties.hidden)
-        .sort((a, b) => a.index - b.index)[0]
-
-    if (!sheet?.title) throw new Error("The spreadsheet does not contain a visible sheet.")
-    return sheet.title
-}
-
 async function updateSpreadsheet(modeledPortfolio) {
     const spreadsheetId = requiredEnvironmentVariable("GOOGLE_SPREADSHEET_ID")
     const credentials = parseServiceAccountCredentials()
@@ -109,7 +96,7 @@ async function updateSpreadsheet(modeledPortfolio) {
         scopes: [SHEETS_SCOPE],
     })
     const sheets = google.sheets({ version: "v4", auth })
-    const sheetTitle = await getFirstVisibleSheet(sheets, spreadsheetId)
+    const sheetTitle = PORTFOLIO_SHEET_TITLE
     const quotedTitle = quoteSheetTitle(sheetTitle)
     const existingResponse = await sheets.spreadsheets.values.get({
         spreadsheetId,

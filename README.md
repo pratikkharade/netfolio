@@ -18,14 +18,13 @@ npm run plaid:fetch
 U.S. Bank and Chase call `/accounts/balance/get`. Robinhood calls both
 `/accounts/balance/get` and `/investments/holdings/get`.
 
-## Auto loan spreadsheet
+## Consolidated spreadsheet
 
-NetFolio reads auto-loan data from spreadsheet
+NetFolio reads all of its data from spreadsheet
 `1l6qj5TbRJcQxL056W474bOYdgH_NDlgQ7xeW_-pT-zg`. The spreadsheet must grant
 **Viewer** access to **Anyone with the link** so the static GitHub Pages app can
-read it. The app reads the two existing tabs by their stable Google Sheet grid IDs,
-so renaming `Sheet1` and `Sheet2` will not break the integration. Renaming them to
-`Loan Summary` and `Payment History` is still recommended for clarity.
+read it. The app reads these tabs by name: `Accounts`, `Loan Summary`,
+`Payment History`, `Goals`, and `App Config`.
 
 ### Loan Summary
 
@@ -54,11 +53,12 @@ shown separately and is not included in total liabilities or net worth.
 
 ## Scheduled spreadsheet refresh
 
-The `Refresh portfolio` GitHub Actions workflow runs at midnight, 6:00 AM,
-noon, and 6:00 PM in the `America/Denver` timezone. It fetches Plaid balances,
-replaces the matching U.S. Bank, Chase, and Robinhood rows in the first visible
-sheet, preserves all other account rows, and updates the date in cell `B1`.
-GitHub Pages continues to read the published CSV configured in `src/config.jsx`.
+The `Refresh portfolio` GitHub Actions workflow runs at 12:07 AM, 6:07 AM,
+12:07 PM, and 6:07 PM in the `America/Denver` timezone. It fetches Plaid
+balances, replaces the matching U.S. Bank, Chase, and Robinhood rows in the
+`Accounts` tab, preserves all other account rows, and updates the date in cell
+`B1`. GitHub Pages reads every tab by name using the URLs configured in
+`src/config.jsx`.
 
 ### Google setup
 
@@ -89,9 +89,9 @@ portfolio → Run workflow** once to verify it. Scheduled runs use the latest
 commit on the default branch. The sync command intentionally logs only the
 updated account count and sheet name, not balances or credentials.
 
-The sync owns columns `A:D` in the first visible sheet. It expects the existing
-layout: update metadata in row 1, headers in row 2, and account data starting in
-row 3 (`name`, `type`, `category`, `balance`). To run the same sync locally, set
+The sync owns columns `A:D` in the `Accounts` tab. It expects the existing layout:
+update metadata in row 1, headers in row 2, and account data starting in row 3
+(`name`, `type`, `category`, `balance`). To run the same sync locally, set
 `GOOGLE_SPREADSHEET_ID` and `GOOGLE_SERVICE_ACCOUNT_KEY_FILE` in `.env.local`
 in addition to the Plaid variables, then run:
 

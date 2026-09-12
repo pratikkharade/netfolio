@@ -1,3 +1,6 @@
+import { hash_url } from "../config.jsx";
+import { parseCSV } from "../utils/csv.js";
+
 export const formatCurrency = (value) => {
     return value.toLocaleString(undefined, {
         style: "currency",
@@ -19,9 +22,12 @@ export async function generateHash(password) {
     return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-import { hash_url } from "../config.jsx";
 export async function fetchStoredHash() {
     const res = await fetch(hash_url + "&t=" + Date.now());
+    if (!res.ok) throw new Error(`Unable to load the stored hash (${res.status}).`);
+
     const text = await res.text();
-    return text.trim().split(",")[1];
+    const storedHash = parseCSV(text)[0]?.[1]?.trim();
+    if (!storedHash) throw new Error("The App Config tab does not contain a password hash.");
+    return storedHash;
 }
